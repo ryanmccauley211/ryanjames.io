@@ -38,11 +38,3 @@ function transitionToPage(pageTarget) {
     }
 
 }
-
-$('a.open-modal').click(function(event) {
-    console.log("hi");
-    $(this).modal({
-        fadeDuration: 300
-    });
-    return false;
-});
