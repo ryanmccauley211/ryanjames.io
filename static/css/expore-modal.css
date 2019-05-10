@@ -1,0 +1,47 @@
+.modal {
+    max-width: 95%;
+}
+
+.explore {
+    margin: 3vmin;
+}
+
+.explore-title {
+    text-align: center;
+    font-size: 8vmin;
+    margin: 4vmin 0 2vmin 0
+}
+
+.explore-subtitle {
+    font-size: 4vmin;
+    margin: 6vmin 0 4vmin 0;
+}
+
+.hr-modal {
+    margin: 2vmin 10vmin 4vmin 10vmin;
+}
+
+.explore-date {
+    display: inline-block;
+    font-size: 3.5vmin;
+    color: #4E4E56;
+    margin: 1.5vmin 0 3.5vmin 0;
+}
+
+.explore-tags-list {
+    display: flex;
+    justify-content: space-around;
+    margin: 4vmin 0 6vmin 0
+}
+
+.explore-tags-list li {
+    display: inline;
+    font-size: 3vmin;
+    font-style: italic;
+    color: #999999;
+}
+
+.explore-text-block {
+    text-align: justify;
+    margin: 3vmin 0;
+}

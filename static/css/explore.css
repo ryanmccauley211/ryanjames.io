@@ -1,0 +1,132 @@
+#explore-page-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    align-items: stretch;
+}
+
+#explore-title-row {
+    animation: fadein 2000ms;
+}
+
+#explore-gallery {
+    flex: 12;
+
+    display: grid;
+    grid-template-rows: repeat(3, calc(100% / 2));
+    grid-auto-rows: calc(100% / 3);
+    grid-template-columns: 1fr 70% 1fr;
+    grid-gap: 2%;
+    overflow: scroll;
+
+    margin: 2vmin 0;
+    animation: fadein 2000ms;
+}
+
+#explore-gallery-element-1 {
+    grid-row: 1 / 2;
+    grid-column: 2 / 3;
+}
+
+#explore-gallery-element-2 {
+    grid-row: 2 / 3;
+    grid-column: 2 / 3;
+}
+
+#explore-gallery-element-3 {
+    grid-row: 3 / 4;
+    grid-column: 2 / 3;
+}
+
+#explore-title {
+    font-size: 10vmin;
+    text-align: center;
+    margin-top: 3vmin;
+}
+
+hr {
+    margin: 5vmin 32vmin;
+}
+
+.explore-gallery-element {
+    overflow: scroll;
+    border: 3px groove #9A9A9A;
+    border-radius: 25px 25px;
+    padding: 2vmin;
+}
+
+#explore-gallery-element-1 {
+    background-image: url("/static/images/iris.jpg");
+    background-size: cover;
+}
+
+.explore-gallery-element-title {
+    text-align: center;
+    font-size: 3vmin;
+}
+
+.explore-gallery-element-title:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.explore-gallery-element-date {
+    display: inline-block;
+    font-size: 1.5vmin;
+    color: #4E4E56;
+    margin: 0.5vmin 0 1.5vmin 0;
+}
+
+.share-icon {
+    width: 4vmin;
+    height: 4vmin;
+    padding-right: 8vmin;
+}
+
+.share-icon:hover {
+    width: 4.5vmin;
+    height: 4.5vmin;
+    padding-right: 7.5vmin;
+}
+
+.share-icon-padding {
+    visibility: hidden;
+    width: 0;
+    height: 4.5vmin;
+}
+
+.explore-gallary-element-tags-list {
+    display: flex;
+    justify-content: space-around;
+    margin: 2vmin 0 3vmin 0
+}
+
+.explore-gallary-element-tag {
+    display: inline;
+    font-size: 1.5vmin;
+    font-style: italic;
+    color: #999999;
+}
+
+#explore-menu-row {
+    flex: 0 0 10%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #DA635D;
+}
+
+.explore-menu-item a {
+    font-family: 'Oxygen', sans-serif;
+    font-size: 5vmin;
+    color: #DEDEDE;
+}
+
+.explore-menu-item a:hover {
+    color: #FEFEFE;
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}

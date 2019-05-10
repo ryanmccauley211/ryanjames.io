@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Memoir</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+    <link rel="stylesheet" href="/static/css/plugins/prism.css"/>
+
+    <link rel="stylesheet" href="/static/css/global.css"/>
+    <link rel="stylesheet" href="/static/css/explore.css"/>
+    <link rel="stylesheet" href="/static/css/expore-modal.css"/>
+
+    <link href="https://fonts.googleapis.com/css?family=Quicksand|Oxygen" rel="stylesheet">
+</head>
+<body>
+
+    <div id="explore-page-container" class="page-container">
+
+        {{/*<a class="open-modal" href="#explore-pytorch-classification-iris-1" rel="modal:open">open</a>*/}}
+
+        <div id="explore-title-row">
+            <h2 id="explore-title" class="page_title">Deep Dives</h2>
+            <hr>
+        </div>
+
+        <div id="explore-gallery">
+
+            {{template "pytorch-classification-iris.html"}}
+
+            <div id="explore-gallery-element-1" class="explore-gallery-element">
+                <a class="open-modal" href="#explore-pytorch-classification-iris-1" rel="modal:open"><h4 class="explore-gallery-element-title">Basic Classification with Pytorch</h4></a>
+                <p class="explore-gallery-element-date">5th May 2019</p>
+                <div class="share-icon-row">
+                    <a href="https://github.com/ryanmccauley211/Oak"><img class="share-icon" src="/static/images/github-share.png"></a>
+                    <a href="https://github.com/ryanmccauley211/Oak"><img class="share-icon" src="/static/images/fb-share.png"></a>
+                    <a href="https://github.com/ryanmccauley211/Oak"><img class="share-icon" src="/static/images/twitter-share.png"></a>
+                    <a href="https://github.com/ryanmccauley211/Oak"><img class="share-icon" src="/static/images/more-share.png"></a>
+                    <a href="#"><img class="share-icon-padding" src="/static/images/more-share.png"></a> <!--Padding-->
+                </div>
+                <ul class="explore-gallary-element-tags-list">
+                    <li class="explore-gallary-element-tag">pytorch</li>
+                    <li class="explore-gallary-element-tag">neural network</li>
+                    <li class="explore-gallary-element-tag">classification</li>
+                    <li class="explore-gallary-element-tag">python</li>
+                    <li class="explore-gallary-element-tag"></li> <!--Padding-->
+                </ul>
+                <p class="explore-gallery-element-summary">
+                    Basic classification using pytorch with the very simple iris dataset. We will introduce some of the <br>
+                    common libraries and go in some amount of depth for beginners.
+                </p>
+            </div>
+        </div>
+
+
+        <div id="explore-menu-row" class="bottom-menu-row">
+            <div id="explore-menu-home" class="explore-menu-item"><a href="/" class="menu-link">Home</a></div>
+            <div id="explore-menu-explore" class="explore-menu-item"><a href="explore" class="menu-link">Explore</a></div>
+            <div id="explore-menu-portfolio" class="explore-menu-item"><a href="portfolio" class="menu-link">Portfolio</a></div>
+            <div id="explore-menu-contact" class="explore-menu-item"><a href="contact" class="menu-link">Contact</a></div>
+            <div id="explore-menu-about" class="explore-menu-item"><a href="about" class="menu-link">About</a></div>
+        </div>
+
+    </div>
+
+<script src="/static/js/plugins/prism.js"></script>
+<script src="/static/js/event-listeners.js"></script>
+
+</body>
+</html>

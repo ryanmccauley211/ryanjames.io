@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Classification with pytorch 1</title>
+</head>
+<body>
+    <div id="explore-pytorch-classification-iris-1" class="explore modal">
+        <h3 id="pytorch-classification-iris-1-title" class="explore-title">Basic Classification with Pytorch</h3>
+        <hr class="hr-modal">
+        <p class="explore-date">5th May 2019</p>
+
+        <div class="share-icon-row">
+            <a href="https://github.com/ryanmccauley211/Oak"><img class="share-icon" src="/static/images/github-share.png"></a>
+            <a href="https://github.com/ryanmccauley211/Oak"><img class="share-icon" src="/static/images/fb-share.png"></a>
+            <a href="https://github.com/ryanmccauley211/Oak"><img class="share-icon" src="/static/images/twitter-share.png"></a>
+            <a href="https://github.com/ryanmccauley211/Oak"><img class="share-icon" src="/static/images/more-share.png"></a>
+            <a href="#"><img class="share-icon-padding" src="/static/images/more-share.png"></a>
+        </div>
+
+        <ul class="explore-tags-list">
+            <li class="explore-tags">pytorch</li>
+            <li class="explore-tags">neural network</li>
+            <li class="explore-tags">classification</li>
+            <li class="explore-tags">python</li>
+        </ul>
+
+        <p class="explore-text-block">
+            In this tutorial we will go over classification using pytorch. We will use one of the simplest
+            datasets to do this called the 'iris' dataset. It is a very popular dataset to get started because
+            it shows great results with near perfect accuracy, which feels great to beginners who are just
+            starting out. The iris dataset consists of 50 samples from three different species of the iris flower.
+            Our task is to create a neural network that can predict which species a sample is based on four features:
+        </p>
+
+        <p class="tab">- Sepal length</p>
+        <p class="tab">- Sepal width</p>
+        <p class="tab">- Petal length</p>
+        <p class="tab">- Petal width</p>
+
+        <p class="explore-text-block"><b>Let's get started!</b> Firstly we need to import some dependencies.</p>
+
+        <pre class="explore-code-block"><code class="language-python">
+            import numpy as np
+            import torch
+            import pandas as pd
+            from sklearn.model_selection import train_test_split
+            from sklearn.preprocessing import LabelBinarizer
+            from sklearn.metrics import confusion_matrix
+            import matplotlib.pyplot as plt
+            import seaborn as sns
+        </code></pre>
+
+        <p class="explore-text-block">
+            Numpy is used for most python AI and machine learning libraries for for high performance mathematics
+            on tensors which are simply n-dimensional arrays. Tensors can have 2 dimensions, 3 dimensions,
+            20 dimensions and so on. You can plug any number 1 or greater into the 'n' in n-dimensional and it will
+            be a valid tensor.
+        </p>
+
+        <p class="explore-text-block">
+            Pytorch is the library we will be using to build our neural network, it also has its' own mathematical
+            operations and tensors, so we will usually convert numpy tensors into pytorch's own tensors then work
+            with them using pytorch's own library. The reason we are still using numpy is because our next import is
+            is sklearn which is another machine learning library with many useful functions. It uses numpy and so
+            we need numpy to use it.
+        </p>
+
+        <p class="explore-text-block">
+            Pandas is another great library used for data analysis. We will be using it to import our data as a
+            pandas dataframe. Pandas dataframe's are powerful and great for preparing data before we start making
+            use of it. The final libraries we need are matplot lib and seaborn which are two popular tools for
+            visualising data. Seaborn is build on top of matplotlib and looks much prettier.
+        </p>
+
+        <h4 class="explore-subtitle">Preprocessing</h4>
+        <p class="explore-text-block">
+            We want to import the data from our .csv file into a pandas dataframe which is simply a container for the
+            data.
+        </p>
+
+        <pre class="explore-code-block"><code class="language-python">
+            dataset = pd.read_csv("../datasets/iris.csv")
+
+            X = dataset.iloc[:, :-1]
+            y = dataset.iloc[:, -1]
+        </code></pre>
+
+        <p class="explore-text-block">
+            We pass the file path of our csv and pandas read_csv() method spits out a dataframe object. This will be a
+            table-esque structure with rows and columns. A flexible way to access the data is to use the dataframe's
+            iloc (index locator). It uses an array notation that allows us to slice parts of the dataframe in each of
+            the axis. We have two axis - rows and columns which are separated by a comma -> [:, :]. The colon tells
+            pandas we want all values along this axis so [:, :] is requesting all rows and all columns. We can specify
+            indices either end of the colon to specify the [start: end]. The iloc for the X values is taking all the rows
+            and all the columns except the last (the -1 indicates to end 1 before the end). The iloc for y is taking all
+            rows, but only one number is specified for the columns axis. This means we are only grabbing one column (-1
+            means the last column) rather than using : to specify a range.
+        </p>
+
+    </div>
+</body>
+</html>

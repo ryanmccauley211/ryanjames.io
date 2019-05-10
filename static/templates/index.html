@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="//cdn.jsdelivr.net/jquery.color-animation/1/mainfile"></script>
+
+    <link rel="stylesheet" href="/static/css/global.css"/>
+    <link rel="stylesheet" href="/static/css/home.css"/>
+
+    <link href="https://fonts.googleapis.com/css?family=Quicksand|Oxygen" rel="stylesheet">
+</head>
+<body>
+
+    <div id="home-container" class="page-container">
+
+        <div class="page-half-partition-left">
+            <div id="main-menu-column">
+                <div></div>
+                <div id="main-menu-explore" class="main-menu-item"><a href="explore" class="menu-link">Explore</a></div>
+                <div id="main-menu-portfolio" class="main-menu-item"><a href="portfolio" class="menu-link">Portfolio</a></div>
+                <div id="main-menu-contact" class="main-menu-item"><a href="contact" class="menu-link">Contact</a></div>
+                <div id="main-menu-about" class="main-menu-item"><a href="about" class="menu-link">About</a></div>
+                <div></div>
+            </div>
+        </div>
+
+        <div class="page-half-partition-right">
+            <div id="author-name-container" class="grid-item">
+                <svg id="name-svg" viewBox="0 0 250 250" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+
+                    <defs>
+                        <style type="text/css">
+                            @import url('https://fonts.googleapis.com/css?family=Tangerine');
+                        </style>
+                    </defs>
+
+                    <text x="13" y="28" transform="scale(4, 4)" fill="#cdcdcd"
+                          style="font-family: 'Tangerine', cursive;">Ryan</text>
+                    <text x="13" y="48" transform="scale(4, 4)" fill="#cdcdcd" style="font-family: 'Tangerine', cursive;">&nbsp&nbsp&nbspJames</text>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/animations.js"></script>
+    <script src="/static/js/event-listeners.js"></script>
+</body>
+</html>

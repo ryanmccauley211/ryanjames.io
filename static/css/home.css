@@ -1,0 +1,41 @@
+#home-container {
+    display: flex;
+    animation: fadein 2000ms;
+}
+
+.page-half-partition-left {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    background-color: #4E4E56;
+    flex: 1;
+    width: 0;
+}
+
+.page-half-partition-right {
+    flex: 1;
+    width: 0;
+    background-color: #DA635D;
+}
+
+#main-menu-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.main-menu-item a {
+    font-family: 'Oxygen', sans-serif;
+    font-size: 7vmin;
+    color: #DEDEDE;
+}
+
+.main-menu-item a:hover {
+    color: #EEEEEE;
+    border-bottom: #EEEEEE 1px solid;
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}

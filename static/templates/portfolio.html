@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Portfolio</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+    <link rel="stylesheet" href="/static/css/plugins/prism.css"/>
+    <link rel="stylesheet" href="/static/css/plugins/lity.css"/>
+
+    <link rel="stylesheet" href="/static/css/global.css"/>
+    <link rel="stylesheet" href="/static/css/portfolio.css"/>
+
+
+    <link href="https://fonts.googleapis.com/css?family=Quicksand|Oxygen" rel="stylesheet">
+</head>
+<body>
+
+    <div id="portfolio-page-container" class="page-container">
+
+        <div id="portfolio-title-row">
+            <h2 id="portfolio-title" class="page_title">Portfolio</h2>
+            <hr>
+        </div>
+
+        <div id="portfolio">
+
+            {{template "oak.html" .}}
+
+            <div class="project-preview-box oak-summary_1">
+                <a class="open-modal" href="#oak-project-container" rel="modal:open"><h4 class="project-preview-title">Oak</h4></a>
+                <ul class="project-languages">
+                    <li class="project-language">java</li>
+                    <li class="project-language">maven</li>
+                </ul>
+                <p class="project-description">
+                    Oak is a way of creating ocarina video and PDF tutorials.
+                    It takes a midi file and maps the notes to ocarina tabs
+                    and processes them into a complete tutorials.
+                </p>
+                <div class="share-icon-row">
+                    <a href="https://github.com/ryanmccauley211/Oak"><img class="share-icon" src="/static/images/github-share.png"></a>
+                    <a href="https://github.com/ryanmccauley211/Oak"><img class="share-icon" src="/static/images/fb-share.png"></a>
+                    <a href="https://github.com/ryanmccauley211/Oak"><img class="share-icon" src="/static/images/twitter-share.png"></a>
+                    <a href="https://github.com/ryanmccauley211/Oak"><img class="share-icon" src="/static/images/more-share.png"></a>
+                    <a href="#"><img class="share-icon-padding" src="/static/images/more-share.png"></a>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="portfolio-menu-row" class="bottom-menu-row">
+            <div id="portfolio-menu-home" class="portfolio-menu-item"><a href="/" class="menu-link">Home</a></div>
+            <div id="portfolio-menu-explore" class="portfolio-menu-item"><a href="explore" class="menu-link">Explore</a></div>
+            <div id="portfolio-menu-portfolio" class="portfolio-menu-item"><a href="portfolio" class="menu-link">Portfolio</a></div>
+            <div id="portfolio-menu-contact" class="portfolio-menu-item"><a href="contact" class="menu-link">Contact</a></div>
+            <div id="portfolio-menu-about" class="portfolio-menu-item"><a href="about" class="menu-link">About</a></div>
+        </div>
+
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <script src="/static/js/plugins/lity.js"></script>
+    <script src="/static/js/plugins/youtube/youtube.min.js"></script>
+    <script src="/static/js/plugins/prism.js"></script>
+    <script src="/static/js/event-listeners.js"></script>
+
+</body>
+</html>

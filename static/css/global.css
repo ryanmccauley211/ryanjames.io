@@ -1,0 +1,63 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html, body, .page-container {
+    height: 100%;
+    width: 100%;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+    font-family: 'Quicksand', sans-serif;
+}
+
+ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+.share-icon {
+    width: 5vmin;
+    height: 5vmin;
+    padding-right: 8vmin;
+}
+
+.share-icon:hover {
+    width: 5.5vmin;
+    height: 5.5vmin;
+    padding-right: 7.5vmin;
+}
+
+.share-icon-padding {
+    visibility: hidden;
+    width: 0;
+    height: 5.5vmin;
+}
+
+.share-icon-padding:hover {
+    cursor: crosshair;
+}
+
+.open-modal {
+    color: black;
+}
+
+input {
+    vertical-align: middle;
+}
+
+.tab {
+    margin-left: 40px;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+.detached {
+    display: none;
+}

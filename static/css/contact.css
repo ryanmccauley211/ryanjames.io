@@ -1,0 +1,136 @@
+#contact-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    align-items: stretch;
+}
+
+#contact-title-row {
+    flex: 2;
+    animation: fadein 2000ms;
+}
+
+#contact-title {
+    font-size: 10vmin;
+    text-align: center;
+    margin-top: 3vmin;
+}
+
+hr {
+    margin: 5vmin 32vmin;
+}
+
+#contact-main-row {
+    flex: 10;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    margin-bottom: 10vmin;
+    animation: fadein 2000ms;
+}
+
+#hire-box, #contribute-box, #other-box {
+    flex: 1;
+    width: 25vw;
+    height: 25vw;
+    border: 3px groove #9A9A9A;
+    color: black;
+    overflow: scroll;
+}
+
+#hire-box:hover, #contribute-box:hover, #other-box:hover {
+    color: honeydew;
+    background-color: #121212;
+    cursor: pointer;
+}
+
+.contact-box-headings {
+    font-size: 5vmin;
+    padding: 1vmin 1.5vmin 2vmin 1.5vmin;
+}
+
+.contact-box-messages {
+    font-size: 3.5vmin;
+    padding: 0 1.5vmin;
+}
+
+.contact-box-padding {
+    flex: 0.2;
+}
+
+#contact-menu-row {
+    flex: 0 0 10%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #DA635D;
+}
+
+.contact-menu-item a {
+    font-family: 'Oxygen', sans-serif;
+    font-size: 5vmin;
+    color: #DEDEDE;
+}
+
+.contact-menu-item a:hover {
+    color: #FEFEFE;
+}
+
+@media only screen and (max-width: 850px) {
+
+    #contact-title-row {
+        flex: 4;
+    }
+
+    #contact-title {
+        font-size: 8vmin;
+    }
+
+    #contact-main-row {
+        align-items: center;
+    }
+
+    #hire-box, #contribute-box, #other-box {
+        width: 25vw;
+        height: 35vw;
+    }
+
+    .contact-box-padding {
+        flex: 0.05;
+    }
+
+    .contact-box-headings {
+        font-size: 4.2vmin;
+        padding: 1vmin 1.5vmin 2vmin 1.5vmin;
+    }
+
+    .contact-box-messages {
+        font-size: 3.2vmin;
+        padding: 0 1.5vmin;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+
+    #contact-title-row {
+        flex: 1;
+    }
+
+    #contact-main-row {
+        flex-direction: column;
+    }
+
+    #hire-box, #contribute-box, #other-box {
+        width: 50vw;
+        height: 30vw;
+    }
+
+    .contact-box-padding {
+        flex: 0.1;
+    }
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
