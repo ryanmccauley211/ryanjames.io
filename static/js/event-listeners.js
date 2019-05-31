@@ -8,12 +8,15 @@ $('.main-menu-item a').each(function () {
 
 function transitionToPage(pageTarget) {
     if (pageTarget === "explore") {
-        fadeBackgroundColorTo($(".page-half-partition-right"), 'white', 2000);
-        fontShrink($(".main-menu-item a"), 0, 1000);
-        resizeSvg($('#name-svg'), 0, 0, 1000);
-        flexGrow($(".page-half-partition-left"), 0, 1000, function () {
-            window.location = "explore";
-            window.history.pushState(stateObj, 'Explore', '/explore');
+
+
+        $('.svg-name-text').fadeOut(250, function () {
+            fadeBackgroundColorTo($(".page-half-partition-right"), 'white', 2000);
+            fontShrink($(".main-menu-item a"), 0, 1000);
+            flexGrow($(".page-half-partition-left"), 0, 1000, function () {
+                window.location = "explore";
+                window.history.pushState(stateObj, 'Explore', '/explore');
+            });
         });
     }
 
