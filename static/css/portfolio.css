@@ -10,18 +10,19 @@
 }
 
 #portfolio-title {
-    font-size: 10vmin;
-    text-align: center;
+    font-size: 7vmin;
+    text-align: right;
+    margin-right: 10vmin;
     margin-top: 3vmin;
 }
 
 hr {
-    margin: 5vmin 32vmin;
+    margin: 5vmin 0 5vmin 75%;
 }
 
 .portfolio-center-row {
     display: grid;
-    grid-template-columns: 15% 1fr 10%;
+    grid-template-columns: 20% 1fr 10%;
     overflow: scroll;
 }
 
@@ -29,8 +30,8 @@ hr {
     flex: 12;
 
     display: grid;
-    grid-template-columns: repeat(auto-fill, 45% 45%);
-    grid-column-gap: 4vmin;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-column-gap: 8vmin;
     grid-row-gap: 8vmin;
     margin: 2vmin 0;
     animation: fadein 2000ms;
@@ -39,20 +40,24 @@ hr {
 .project-preview-box {
     display: grid;
     grid-row-gap: 4vmin;
-    background-color: #F9FBFD;
     border: 1px solid #CDCDCD;
     border-radius: 2px 2px;
-    padding: 1vmin;
 }
 
 .project-preview-title {
+    font-family: 'Dancing Script', cursive;
     text-align: center;
     font-size: 7vmin;
+    background-color: #FAFAFA;
+}
+
+
+.project-preview-box p, .share-icon-row{
+    padding: 1vmin;
 }
 
 .project-preview-title:hover {
     cursor: pointer;
-    text-decoration: underline;
 }
 
 #portfolio-menu-row {

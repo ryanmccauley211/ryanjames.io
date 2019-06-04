@@ -1,8 +1,3 @@
-.project-preview-title {
-    text-align: left;
-    font-size: 3vmin;
-}
-
 .modal {
     max-width: 95%;
 }
@@ -20,8 +15,9 @@
 }
 
 .project-title {
+    font-family: 'Dancing Script', cursive;
     text-align: center;
-    font-size: 8vmin;
+    font-size: 10vmin;
     margin: 4vmin 0 2vmin 0
 }
 
