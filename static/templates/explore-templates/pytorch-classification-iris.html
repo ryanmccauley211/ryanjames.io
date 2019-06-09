@@ -249,6 +249,166 @@
             and so when you get your softmax output you will notice the summing all value for all the categories will
             add up to one.
         </p>
+
+        <pre class="explore-code-block"><code class="language-python">
+            loss_fn = torch.nn.MSELoss()
+            optimizer = torch.optim.SGD(model.parameters(), lr=0.03)
+        </code></pre>
+
+        <p class="explore-text-block">
+            Next we set our loss function and optimizer. The loss function uses mean squared error and the optimizer
+            is using stochastic gradient descent. We will look more at these on some of our tangents, however for now
+            all you need to know is an intuitive idea on what they are used for. When our model makes a prediction we
+            first need to compare the prediction with the actual outcome. Loss functions output the difference between
+            these actual and predicted outcomes. There are many different loss functions with different methods of
+            determining this difference (loss), however they all have the purpose of describing how far our model was
+            off the mark in predicting the outcome.
+        </p>
+
+        <p class="explore-text-block">
+            The optimizer is used to of course optimize our model as the name indicates. What this means is that after
+            the loss indicates inaccurate our prediction was the optimizer has the role of determining how best to
+            tweak our model to become more accurate. Notice the parameter <i>lr=0.03</i>, it stands for <b>learning rate</b>
+            and determines the magnitude of this tweak. Lower learning rate means that the weights and biases that we
+            change to tweak our model are tuned more finely. Higher learning rate values allow for more coarse tuning.
+            A learning rate that is too low can lead to very slow or non-existent learning because the changes are too
+            small. A learning rate that is too high can lead to overshooting the target - that is the optimal values
+            for the weights and biases we are looking for. We will look more into these concepts in our gradient descent
+            tangent. There are many optimizers like there are many loss functions, but again the important point to
+            remember is that they all have the purpose of determining how best to tweak our model to improve predictive
+            accuracy.
+        </p>
+
+        <h4 class="explore-subtitle">Training Our Model</h4>
+
+        <p class="explore-text-block">
+            Now that the model is setup it is time to train it. We do this in a for loop with the number of iterations
+            being the number of times we want to train the model. These iterations are sometimes called epochs, or
+            episodes.
+        </p>
+
+        <pre class="explore-code-block"><code class="language-python">
+            # Train
+            losses = np.zeros(500)
+            for i in range(500):
+                y_pred = model(x_train)
+
+                loss = loss_fn(y_pred, y_train)
+                losses[i] = loss
+                print("Loss at time step {}: {:.4f}".format(i + 1, loss.item()))
+
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
+        </code></pre>
+
+        <p class="explore-text-block">
+            Outside the loop we initialize a ndarray to hold our loss values for each epoch (loop iteration). This
+            allows us to graph it later. Inside the for loop we first make a prediction for all our x_train samples.
+            Notice we are passing in a matrix, each row being a sample that matches the input shape of our network.
+            The output is therefore a vector of predictions, a prediction for each sample (row) of our x_train input.
+            Now that we have our predictions we can work out the loss. Passing y_pred (predicted output) and y_train
+            (actual output) allows our loss function to compare how accurate or inaccurate our model was. We then save
+            the loss for later.
+        </p>
+
+        <p class="explore-text-block">
+            The line - optimizer.zero_grad() basically means that we are starting fresh when performing our
+            optimizer calculations and so ignore any calculations from the previous iteration. We will look more into
+            this when discussing gradient descent. The next line - loss.backward() performs backpropagation which at a
+            high level basically distributes responsibility across the network for what neurons are most and least
+            responsible for the inaccuracy. This is a complex area that will be discussed in detail on its' own. All
+            you need to understand for now is that it distributes responsibility for the loss across the network for
+            the optimizer to be able to best update the model to improve the model. The model at this point has not
+            changed it all, only how the model should be changed, and this is where the line optimizer.step() comes in.
+            It updates the parameters - the weights and biases of the neurons to tweak the model towards hopefully
+            more accurate predictions.
+         </p>
+
+        <p class="explore-text-block">
+            After the for loop has completed all the iterations then our model has been trained. At this point it is
+            a good idea to evaluate the model, perhaps graph some output and make some predictions on new data it has
+            never seen to evaluate the predictive accuracy.
+        </p>
+
+        <h4 class="explore-subtitle">Model Evaluation</h4>
+
+        <pre class="explore-code-block"><code class="language-python">
+            # Graph loss
+            sns.set_style("darkgrid")
+            loss_df = pd.DataFrame({'Step': range(500), 'Loss': losses})
+            ax = sns.lineplot(x='Step', y='Loss', data=loss_df)
+            plt.show()
+        </code></pre>
+
+        <p class="explore-text-block">
+            We are using seaborn, a library built on top of matplotlib that outputs very aesthetically pleasing graphs.
+            Here we set the style before creating a pandas dataframe using the loss with the number of iterations. We
+            label the graph, pass the dataframe and use plt.show() to display the image.
+        </p>
+
+        <img src="/static/templates/explore-templates/images/iris-loss.png"/>
+
+        <p class="explore-text-block">
+            Notice how the loss decreases over the 500 iterations as our model becomes more accurate in predicting the
+            correct iris flower category.
+        </p>
+
+        <pre class="explore-code-block"><code class="language-python">
+            # Test
+            y_pred = model(x_test)
+            loss = loss_fn(y_pred, y_test)
+            print("Test Loss: {:.4f}".format(loss))
+        </code></pre>
+
+        <p class="explore-text-block">
+            Next we can perform a prediction based on data our model has not yet seen. This is why we split our data up
+            earlier and have x_test and y_test.
+        </p>
+
+        <pre class="explore-code-block"><code class="language-python">
+            # Accuracy
+            pred_labels = torch.argmax(y_pred, dim=1)
+            actual_labels = torch.argmax(y_test, dim=1)
+            results = pred_labels == actual_labels
+            correct_preds = len([i for i in results if i == 1])
+            incorrect_preds = len(y_test) - correct_preds
+            accuracy = correct_preds / len(results)
+            print("Accuracy: {:.4f}".format(accuracy))
+
+            # Visualise
+            conf_matrix = confusion_matrix(actual_labels, pred_labels)
+            labels = list(set(y))
+            df_conf_matrix = pd.DataFrame(conf_matrix, index=labels, columns=labels)
+            plt.figure(figsize=(10, 7))
+            sns.set(font_scale=1.4)
+            sns.heatmap(df_conf_matrix, annot=True, annot_kws={"size": 16})
+            plt.show()
+        </code></pre>
+
+        <p class="explore-text-block">
+            The last blocks of code are evaluating the accuracy of the model along with some visualization aid. We use
+            the predictions we just made to determine how many correct and incorrect predictions there were. We also
+            determine which categories were predicted incorrectly and chart this in a confusion matrix. A confusion matrix
+            is a nice way to visualize which categories were misclassified. It not only tallies these misclassifications
+            but also what they were misclassified as. This helps us see for example if category A is being misclassified
+            as category B frequently whereas category C is often being mistaken for category A.
+        </p>
+
+        <img src="/static/templates/explore-templates/images/iris-confusion-matrix.png"/>
+
+        <h4 class="explore-subtitle">Summary</h4>
+
+        <p class="explore-text-block">
+            I hope this deep dive into one of the more basic classification examples was useful. We were able to take
+            the iris dataset and preprocess the data. We then created a model and trained the model using pytorch to
+            classify iris flowers based on a number of features of the flowers. After training our model we were then
+            able to graph the loss and visualize the accuracy of our model using seaborn. The iris flower dataset produces
+            very high accuracies and so it is a good place to start, however other datasets are less straightforward and
+            those high prediction accuracies are not so commonplace. The concepts used in this exploration are basic but
+            very useful and can be carried forward to more complex undertakings.
+        </p>
+
     </div>
 </body>
 </html>
