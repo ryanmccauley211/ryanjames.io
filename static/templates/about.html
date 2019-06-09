@@ -2,9 +2,83 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>About</title>
+
+    <link rel="stylesheet" href="/static/css/global.css"/>
+    <link rel="stylesheet" href="/static/css/about.css"/>
+
+    <link href="https://fonts.googleapis.com/css?family=Quicksand|Oxygen" rel="stylesheet">
 </head>
 <body>
 
+<div id="about-container" class="page-container">
+
+    <div class="page-half-partition-left">
+        <div class="about-top-line">
+            <div class="menu-area">
+                <div class="about-menu-row">
+                    <div></div>
+                    <div id="about-menu-home" class="about-menu-item"><a href="home" class="menu-link">Home</a></div>
+                    <div id="about-menu-explore" class="about-menu-item"><a href="explore" class="menu-link">Explore</a></div>
+                    <div id="about-menu-portfolio" class="about-menu-item"><a href="portfolio" class="menu-link">Portfolio</a></div>
+                    <div id="about-menu-contact" class="about-menu-item"><a href="contact" class="menu-link">Contact</a></div>
+                    <div></div>
+                </div>
+                <div class="menu-padding"></div>
+            </div>
+            <div class="greeting-area">
+                <h3 class="greeting">Hi!</h3>
+            </div>
+
+        </div>
+
+        <p class="about-me-paragraph">
+            I am a full stack developer with a love for learning, solving problems and creating.
+        </p>
+
+        <p class="about-me-paragraph-right">
+            I have a keen interested in artificial intelligence and believe it will change everything in the coming years.
+        </p>
+
+        <p class="about-me-paragraph-medium">
+            I also enjoy....
+        </p>
+
+        <div class="faves-icon-gallery">
+            <img id="swim-icon" class="faves-icons" src="/static/images/swim-icon.png">
+            <img id="piano-icon" class="faves-icons" src="/static/images/piano-icon.png">
+            <img id="coffee-icon" class="faves-icons" src="/static/images/coffee-icon.png">
+            <img id="tennis-icon" class="faves-icons" src="/static/images/tennis-icon.png">
+            <img id="dog-icon" class="faves-icons" src="/static/images/dog-icon.png">
+            <img id="gaming-icon" class="faves-icons" src="/static/images/gaming-icon.png">
+            <img id="vr-icon" class="faves-icons" src="/static/images/vr-icon.png">
+            <img id="robot-icon" class="faves-icons" src="/static/images/robot-icon.png">
+            <img id="cinema-icon" class="faves-icons" src="/static/images/cinema-icon.png">
+            <img id="space-icon" class="faves-icons" src="/static/images/space-icon.png">
+        </div>
+    </div>
+
+    <div class="page-half-partition-right">
+        <div id="author-name-container" class="grid-item">
+            <svg id="name-svg" viewBox="0 0 250 250" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+
+                <defs>
+                    <style type="text/css">
+                        @import url('https://fonts.googleapis.com/css?family=Tangerine');
+                    </style>
+                </defs>
+
+                <text class="svg-name-text" x="13" y="25" transform="scale(4, 4)" fill="#cdcdcd"
+                      style="font-family: 'Tangerine', cursive;">Ryan</text>
+                <text class="svg-name-text" x="13" y="45" transform="scale(4, 4)" fill="#cdcdcd" style="font-family: 'Tangerine', cursive;">&nbsp&nbsp&nbspJames</text>
+            </svg>
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdn.jsdelivr.net/jquery.color-animation/1/mainfile"></script>
+<script src="/static/js/animations.js"></script>
+<script src="/static/js/event-listeners.js"></script>
 </body>
 </html>

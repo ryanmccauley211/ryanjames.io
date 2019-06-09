@@ -1,0 +1,152 @@
+#about-container {
+    display: flex;
+    animation: fadein 2000ms;
+}
+
+.page-half-partition-left {
+    background-color: #4E4E56;
+    flex: 1;
+}
+
+.page-half-partition-right {
+    flex: 1;
+
+    display: flex;
+    justify-content: space-around;
+    width: 0;
+    height: 100%;
+    align-self: center;
+    background-color: #DA635D;
+}
+
+#author-name-container {
+    width: 100%;
+}
+
+.about-top-line {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.menu-area {
+    display: flex;
+    flex-direction: column;
+}
+
+.about-menu-row {
+    display: flex;
+    justify-content: space-around;
+    align-items: start;
+    flex: 1;
+    background-color: #DA635D;
+    padding: 6px;
+}
+
+.menu-padding {
+    flex: 2;
+}
+
+.about-menu-item a {
+    font-size: 3vmin;
+    color: #DEDEDE;
+}
+
+.about-menu-item a:hover {
+    color: #EEEEEE;
+}
+
+.greeting-area {
+}
+
+.greeting {
+    font-size: 10vmin;
+    color: #DEDEDE;
+    margin: 15px 40px 15px 0;
+    text-align: right;
+}
+
+.about-me-paragraph, .about-me-paragraph-right {
+    font-size: 3vmin;
+    color: #DEDEDE;
+    padding: 15px 7vmin 15px 3vmin;
+}
+
+.about-me-paragraph-right {
+    padding: 15px 3vmin 15px 7vmin;
+    text-align: right;
+}
+
+.about-me-paragraph-medium{
+    font-size: 4.5vmin;
+    font-weight: bold;
+    color: #DEDEDE;
+    padding: 15px 7vmin;
+}
+
+.faves-icon-gallery {
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-columns: repeat(7, 1fr);
+    margin: 50px 10px;
+}
+
+.faves-icons {
+    width: 50px;
+    height: 50px;
+}
+
+#space-icon {
+    grid-row: 2 / 3;
+    grid-column: 1 / 2;
+}
+
+#coffee-icon {
+    grid-row: 1 / 2;
+    grid-column: 2 / 3;
+}
+
+#dog-icon {
+    grid-row: 2 / 3;
+    grid-column: 3 / 4;
+}
+
+#vr-icon {
+    grid-row: 3 / 4;
+    grid-column: 2 / 3;
+}
+
+#robot-icon {
+    grid-row: 1 / 2;
+    grid-column: 6 / 7;
+}
+
+#swim-icon {
+    grid-row: 3 / 4;
+    grid-column: 6 / 7;
+}
+
+#gaming-icon {
+    grid-row: 1 / 2;
+    grid-column: 4 / 5;
+}
+
+#piano-icon {
+    grid-row: 3 / 4;
+    grid-column: 4 / 5;
+}
+
+#tennis-icon {
+    grid-row: 2 / 3;
+    grid-column: 5 / 6;
+}
+
+#cinema-icon {
+    grid-row: 2 / 3;
+    grid-column: 7 / 8;
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
