@@ -69,12 +69,12 @@
 .about-me-paragraph, .about-me-paragraph-right {
     font-size: 3vmin;
     color: #DEDEDE;
-    padding: 15px 7vmin 15px 3vmin;
+    padding: 15px 7vmin 15px 10px;
 }
 
 .about-me-paragraph-right {
-    padding: 15px 3vmin 15px 7vmin;
-    text-align: right;
+    padding: 15px 3px 15px 10vmin;
+    text-align: left;
 }
 
 .about-me-paragraph-medium{
