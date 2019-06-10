@@ -1,0 +1,72 @@
+.modal {
+    max-width: 95%;
+}
+
+.contact-form-modal {
+    background-color: #FAFAFA;
+}
+
+.contact-modal-intro-message {
+    font-size: 3.5vmin;
+    font-style: italic;
+    padding: 7px 5px 20px 5px;
+}
+
+label {
+    font-size: 3vmin;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.name-row {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.label-input-pair {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 5px;
+}
+
+label {
+    flex: 1;
+}
+
+input, select {
+    font-size: 2.5vmin;
+    flex: 6;
+    border-radius: 4px 4px;
+}
+
+#email-error {
+    flex-basis: 100%;
+    text-align: left;
+    color: red;
+}
+
+select {
+    border-width: 2px;
+    border-style: inset;
+    border-color: initial;
+    border-image: initial;
+}
+
+textarea {
+    font-size: 2.5vmin;
+    border-radius: 4px 4px;
+    margin: 10px 0;
+}
+
+.label-textarea-pair {
+    padding: 5px;
+}
+
+.form-message {
+    width: 100%;
+}

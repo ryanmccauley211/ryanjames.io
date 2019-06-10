@@ -8,6 +8,7 @@
 
     <link rel="stylesheet" href="/static/css/global.css"/>
     <link rel="stylesheet" href="/static/css/contact.css"/>
+    <link rel="stylesheet" href="/static/css/contact-forms.css"/>
 
     <link href="https://fonts.googleapis.com/css?family=Quicksand|Oxygen" rel="stylesheet">
 </head>
@@ -22,21 +23,21 @@
 
         <div id="contact-main-row">
             <div class="contact-box-padding"></div>
-            <a id="hire-box" class="contact-boxes" href="#ex1" rel="modal:open">
-                <h3 class="contact-box-headings">Hire me</h3>
+            <a id="hire-box" class="contact-boxes open-modal" href="#hire-form-modal" rel="modal:open">
+                <h3 class="contact-box-headings">Talk Business</h3>
                 <p class="contact-box-messages">
                     Any business enquiries, let's get something arranged.
                 </p>
             </a>
             <div class="contact-box-padding"></div>
-            <a id="contribute-box" class="contact-boxes" href="#ex1" rel="modal:open">
+            <a id="contribute-box" class="contact-boxes open-modal" href="#contribute-form-modal" rel="modal:open">
                 <h3 class="contact-box-headings">Contribute</h3>
                 <p class="contact-box-messages">
                     Seen a project you like and want to get involved or know more?
                 </p>
             </a>
             <div class="contact-box-padding"></div>
-            <a id="other-box" class="contact-boxes" href="#ex1" rel="modal:open">
+            <a id="other-box" class="contact-boxes open-modal" href="#other-form-modal" rel="modal:open">
                 <h3 class="contact-box-headings">Everything else</h3>
                 <p class="contact-box-messages">
                     General questions, feedback, or a simple hello. I'd love to hear from you.
@@ -45,18 +46,130 @@
             <div class="contact-box-padding"></div>
         </div>
 
-        <div id="contact-menu-row" class="bottom-menu-row">
-                <div id="contact-menu-home" class="contact-menu-item"><a href="/" class="menu-link">Home</a></div>
-                <div id="contact-menu-explore" class="contact-menu-item"><a href="explore" class="menu-link">Explore</a></div>
-                <div id="contact-menu-portfolio" class="contact-menu-item"><a href="portfolio" class="menu-link">Portfolio</a></div>
-                <div id="contact-menu-portfolio" class="contact-menu-item"><a href="contact" class="menu-link">Contact</a></div>
-                <div id="contact-menu-about" class="contact-menu-item"><a href="about" class="menu-link">About</a></div>
+        <div id="hire-form-modal" class="modal contact-form-modal">
+            <p class="contact-modal-intro-message">
+                Leave me a brief message on what you need and how I can help. I will be in touch to get it arranged.
+            </p>
+            <form id="hire-form" class="contact-form" method="post" target="contact">
+                <input type="hidden" name="form-type" value="hire">
+                <div class="name-row">
+                    <div class="label-input-pair">
+                        <label for="first-name">First Name:</label>
+                        <input id="first-name" class="form-input" type="text" name="first-name" placeholder="Enter your first name">
+                    </div>
+
+                    <div class="label-input-pair">
+                        <label for="last-name">Last Name:</label>
+                        <input id="last-name" class="form-input" type="text" name="last-name" placeholder="Enter your last name">
+                    </div>
+                </div>
+
+                <div class="label-input-pair">
+                    <label for="email">Email:</label>
+                    <input id="email" class="form-input" type="email" name="email" placeholder="Enter your email" required>
+                </div>
+
+                <div class="label-input-pair">
+                    <label for="contact-number">Contact number:</label>
+                    <input id="contact-number" class="form-input" type="text" name="contact-num" placeholder="Enter your contact">
+                </div>
+
+                <div class="label-textarea-pair">
+                    <textarea id="message" class="form-message" name="message" placeholder="How can I help?" rows="10"></textarea>
+                </div>
+                <input type="submit">
+            </form>
         </div>
 
+        <div id="contribute-form-modal" class="modal contact-form-modal">
+            <p class="contact-modal-intro-message">
+                Great you hear you've seen a project you'd like to get involved in. Please drop me a message
+                telling me a bit about yourself and what project grabbed your interest.
+            </p>
+            <form id="contribute-form" class="contact-form" method="post" target="contact">
+                <input type="hidden" name="form-type" value="contribute">
+                <div class="name-row">
+                    <div class="label-input-pair">
+                        <label for="first-name">First Name:</label>
+                        <input id="first-name" class="form-input" type="text" name="first-name" placeholder="Enter your first name">
+                    </div>
+
+                    <div class="label-input-pair">
+                        <label for="last-name">Last Name:</label>
+                        <input id="last-name" class="form-input" type="text" name="last-name" placeholder="Enter your last name">
+                    </div>
+                </div>
+
+                <div class="label-input-pair">
+                    <label for="email">Email:</label>
+                    <input id="email" class="form-input" type="text" name="email" placeholder="Enter your email" required>
+                </div>
+
+                <div class="label-input-pair">
+                    <label for="project">Project:</label>
+                    <select id="project" name="project-name">
+                        <option value="oak">Oak</option>
+                        <option value="gridworld">Gridworld</option>
+                    </select>
+                </div>
+
+                <div class="label-textarea-pair">
+                    <textarea id="message" class="form-message" name="message" placeholder="Tell me a bit about yourself" rows="10"></textarea>
+                </div>
+                <input type="submit">
+            </form>
+        </div>
+
+        <div id="other-form-modal" class="modal contact-form-modal">
+            <p class="contact-modal-intro-message">
+                Feel free to ask me anything, for better or worse! I will do my best to respond if you ask a
+                question. Any issues on the website I would also appreciate hearing about.
+            </p>
+            <form id="other-form" class="contact-form" method="post" target="contact">
+                <input type="hidden" name="form-type" value="other">
+                <div class="name-row">
+                    <div class="label-input-pair">
+                        <label for="first-name">First Name:</label>
+                        <input id="first-name" class="form-input" type="text" name="first-name" placeholder="Enter your first name">
+                    </div>
+
+                    <div class="label-input-pair">
+                        <label for="last-name">Last Name:</label>
+                        <input id="last-name" class="form-input" type="text" name="last-name" placeholder="Enter your last name">
+                    </div>
+                </div>
+
+                <div class="label-input-pair">
+                    <label for="email">Email:</label>
+                    <input id="email" class="form-input" type="text" name="email" placeholder="Enter your email" required>
+                </div>
+
+                <div class="label-textarea-pair">
+                    <textarea id="message" class="form-message" name="message" placeholder="How can I help?" rows="10"></textarea>
+                </div>
+                <input type="submit">
+            </form>
+        </div>
+
+
+        <div id="contact-menu-row" class="bottom-menu-row">
+            <div id="contact-menu-home" class="contact-menu-item"><a href="/" class="menu-link">Home</a></div>
+            <div id="contact-menu-explore" class="contact-menu-item"><a href="explore" class="menu-link">Explore</a></div>
+            <div id="contact-menu-portfolio" class="contact-menu-item"><a href="portfolio" class="menu-link">Portfolio</a></div>
+            <div id="contact-menu-portfolio" class="contact-menu-item"><a href="contact" class="menu-link">Contact</a></div>
+            <div id="contact-menu-about" class="contact-menu-item"><a href="about" class="menu-link">About</a></div>
+        </div>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
     <script src="/static/js/event-listeners.js"></script>
+    <script src="/static/js/modal.js"></script>
+    <script src="/static/js/plugins/jquery-validator/jquery.validate.min.js"></script>
+    <script>
+        $("#hire-form").validate();
+        $("#contribute-form").validate();
+        $("#other-form").validate();
+    </script>
 </body>
 </html>

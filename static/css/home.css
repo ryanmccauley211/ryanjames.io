@@ -14,8 +14,17 @@
 
 .page-half-partition-right {
     flex: 1;
+
+    display: flex;
+    justify-content: space-around;
     width: 0;
+    height: 100%;
+    align-self: center;
     background-color: #DA635D;
+}
+
+#author-name-container {
+    width: 100%;
 }
 
 #main-menu-column {

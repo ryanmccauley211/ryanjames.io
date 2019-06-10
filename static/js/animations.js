@@ -25,5 +25,8 @@ function resizeSvg(element, widthToVal, heightToVal, duration) {
         width: widthToVal,
         height: heightToVal
     }, duration)
+}
 
+function fillTransition(element, targetColor, duration) {
+    element.css({ fill: targetColor, transition: duration});
 }

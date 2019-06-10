@@ -74,14 +74,17 @@
         </p>
 
         <h4 class="explore-subtitle">Preprocessing</h4>
+
         <p class="explore-text-block">
             We want to import the data from our .csv file into a pandas dataframe which is simply a container for the
             data.
         </p>
 
         <pre class="explore-code-block"><code class="language-python">
+            # Load dataset
             dataset = pd.read_csv("../datasets/iris.csv")
 
+            # Split features / labels
             X = dataset.iloc[:, :-1]
             y = dataset.iloc[:, -1]
         </code></pre>
@@ -96,6 +99,314 @@
             and all the columns except the last (the -1 indicates to end 1 before the end). The iloc for y is taking all
             rows, but only one number is specified for the columns axis. This means we are only grabbing one column (-1
             means the last column) rather than using : to specify a range.
+        </p>
+
+        <p class="explore-text-block">
+            Our labels y consist of three iris types. As this is categorical data we need to convert it to numerical
+            for our neural network. One way to do this is to use sklearn's LabelBinarizer. This converts a vector of
+            n labels into a matrix of size [categories] * [samples]. Each column of the matrix represents a category
+            and each row represents a sample. The value of the label is represented by a 1 for each sample and the rest
+            are 0.
+        </p>
+
+        <p class="explore-text-block">
+            As an example, if the y labels = [A, B, C] - so three samples with three unique categories. The
+            LabelBinarizer would convert it to a 3 by 3 matrix like:
+        </p>
+
+
+        <pre class="explore-code-block"><code class="language-python">
+            [[1, 0, 0]
+             [0, 1, 0]
+             [0, 0, 1]]
+        </code></pre>
+
+        <p class="explore-text-block">
+            Notice three columns to represent each unique category and a 1 to represent which category a particular
+            sample falls into. You may be wondering why we don't just assign values such 1, 2, 3 to each category.
+            The issue with this is that the categories need to be represented in such a way that the order of the
+            categories do not matter, for example if you have categories of animals such as dog=1, cat=2, mouse=3 and
+            horse=4. If you add a dog and cat you get a mouse, which makes little sense, so that is why they are given their
+            own columns to avoid any ordering of the categories.
+        </p>
+
+        <p class="explore-text-block">
+            The LabelBinarizer is already imported, we just need to fit it to our y values and then transform those into
+            the encoded categorical data.
+        </p>
+
+        <pre class="explore-code-block"><code class="language-python">
+            # Encode labels
+            lb = LabelBinarizer()
+            y_encoded = lb.fit_transform(y)
+        </code></pre>
+
+        <p class="explore-text-block">
+            Now that our labels have been encoded we have one more step to complete for what's called the
+            <b>data preprocessing</b> stage where we basically prepare our data before we start working with it to
+            train our model and make predictions. In the final preprocessing stage we need to split our dataset into
+            a training set and a test set. The training set is the proportion of the data we will use to train our
+            model. The test set will then be used to test our model and evaluate how well it performs
+        </p>
+
+        <p class="explore-text-block">
+            The goal in machine learning is to train a model that can make accurate predictions based on the input
+            we give it. If it only needs to make predictions on data it has already seen (the training set) then it
+            is difficult to know if it can make good predictions on new data it has never seen. This is why it is
+            important to split our dataset into training and test sets. It means that we are evaluating it on new data
+            it has never seen and if it performs well it shows it has learnt to generalise it's predictions beyond
+            the training data.
+        </p>
+
+        <p class="explore-text-block">
+            In sklearn there is a useful method that perfoms the split for us for both features and labels. We can
+            define the test_size as a decimal. We are using 0.2 -> 20% of our dataset for testing leaving 80% for
+            training.
+        </p>
+
+        <pre class="explore-code-block"><code class="language-python">
+            # Split train / test sets
+            x_train, x_test, y_train, y_test = train_test_split(X.values, y_encoded, test_size=0.2)
+
+            x_train = torch.tensor(x_train, dtype=torch.float)
+            x_test = torch.tensor(x_test, dtype=torch.float)
+            y_train = torch.tensor(y_train, dtype=torch.float)
+            y_test = torch.tensor(y_test, dtype=torch.float)
+        </code></pre>
+
+        <p class="explore-text-block">
+            Sklearn outputs the split as ndarrays, part of the numpy package. Pytorch uses its' own built-in tensors,
+            so the bottom four lines are simply creating pytorch tensors from the ndarrays.
+        </p>
+
+        <h4 class="explore-subtitle">Model Creation</h4>
+
+        <p class="explore-text-block">
+            Now that the preprocessing has been completed we can work on creating our model using pytorch. The model
+            consists of a series of layers of neurons and activation functions. Let's talk about the structure of a
+            simple neural network like the one we will create.
+        </p>
+
+        <p class="explore-text-block">
+            A neural network is made up of layers of neurons. The first layer is known as the <b>input layer</b> and
+            the last layer is known as the <b>output layer</b>. Any layers between the input and output layer are
+            called <b>hidden layers</b> of which there are usually at least one. Each layer also has an
+            <b>activation function</b> which performs some calculations on the input to decide whether the neuron
+            is 'activated' or not. The pattern of these activations flowing through the layers of the neural network
+            is where the magic happens. Pytorch's Module class is the base class for the components that make up neural
+            networks such as layers and activation functions.
+        </p>
+
+        <p class="explore-text-block">
+            Pytorch has more than one way of building a neural network, however we will just focus on one of them for
+            now that is common for most basic networks. We will use pytorch's <b>Sequential</b> class. Sequential is
+            a container for modules that will be run in the order they are passed in - as a sequence. See below the
+            Sequential constructor takes in the networks modules.
+        </p>
+
+        <pre class="explore-code-block"><code class="language-python">
+            model = torch.nn.Sequential(
+                # input layer
+                torch.nn.Linear(x_train.shape[1], 16),
+                torch.nn.ReLU(),
+                # hidden layer
+                torch.nn.Linear(16, 8),
+                torch.nn.ReLU(),
+                # output layer
+                torch.nn.Linear(8, y_train.shape[1]),
+                torch.nn.Softmax()
+            )
+        </code></pre>
+
+        <p class="explore-text-block">
+            This network consists of an input layer, one hidden layer and an output layer. The Linear modules simply
+            mean that the neurons in this layer are fully connected to the neurons in the next layer
+        </p>
+        <!--INSERT DENSE EXAMPLE-->
+
+        <p class="explore-text-block">
+            Each layer needs to know the shape of the input and the shape of the output. Of course that means the
+            input of a layer needs to be the same shape as the output of the previous layer. The input layer is a special
+            case in the sense that the shape has to be the shape of the data that it is to receive is (4) as it has 4
+            features. This does not consider the number of samples in the dataset being passed through and that's why we
+            ignore the first axis of x_train.shape. This also means that we can pass 10 samples, 50 samples or any number
+            of samples into our network as a single batch as long as each sample has a shape of (4).
+        </p>
+
+        <p class="explore-text-block">
+            The activation functions used by the input and hidden layer is a ReLU activation (Rectified Linear Unit).
+            The shape of the ReLU can be seen below.
+        </p>
+        <!--INSERT ReLU-->
+
+        <p class="explore-text-block">
+            Finally we have the output layer that must output the shape of (3). Recall that y was originally one of
+            three categories, however we encoded them to look like [0, 0, 1] for example and so this is the output shape.
+            Softmax is a useful activation function that is used for classifiers. Softmax basically outputs a confidence
+            for each of the categories with a number between 0 and 1, 1 meaning that it is certain in its' prediction. In
+            our case it will output this confidence for the three categories of iris flowers and we will take the highest
+            as the predicted output of our network. The confidence I am referring to is actually a probability distribution
+            and so when you get your softmax output you will notice the summing all value for all the categories will
+            add up to one.
+        </p>
+
+        <pre class="explore-code-block"><code class="language-python">
+            loss_fn = torch.nn.MSELoss()
+            optimizer = torch.optim.SGD(model.parameters(), lr=0.03)
+        </code></pre>
+
+        <p class="explore-text-block">
+            Next we set our loss function and optimizer. The loss function uses mean squared error and the optimizer
+            is using stochastic gradient descent. We will look more at these on some of our tangents, however for now
+            all you need to know is an intuitive idea on what they are used for. When our model makes a prediction we
+            first need to compare the prediction with the actual outcome. Loss functions output the difference between
+            these actual and predicted outcomes. There are many different loss functions with different methods of
+            determining this difference (loss), however they all have the purpose of describing how far our model was
+            off the mark in predicting the outcome.
+        </p>
+
+        <p class="explore-text-block">
+            The optimizer is used to of course optimize our model as the name indicates. What this means is that after
+            the loss indicates inaccurate our prediction was the optimizer has the role of determining how best to
+            tweak our model to become more accurate. Notice the parameter <i>lr=0.03</i>, it stands for <b>learning rate</b>
+            and determines the magnitude of this tweak. Lower learning rate means that the weights and biases that we
+            change to tweak our model are tuned more finely. Higher learning rate values allow for more coarse tuning.
+            A learning rate that is too low can lead to very slow or non-existent learning because the changes are too
+            small. A learning rate that is too high can lead to overshooting the target - that is the optimal values
+            for the weights and biases we are looking for. We will look more into these concepts in our gradient descent
+            tangent. There are many optimizers like there are many loss functions, but again the important point to
+            remember is that they all have the purpose of determining how best to tweak our model to improve predictive
+            accuracy.
+        </p>
+
+        <h4 class="explore-subtitle">Training Our Model</h4>
+
+        <p class="explore-text-block">
+            Now that the model is setup it is time to train it. We do this in a for loop with the number of iterations
+            being the number of times we want to train the model. These iterations are sometimes called epochs, or
+            episodes.
+        </p>
+
+        <pre class="explore-code-block"><code class="language-python">
+            # Train
+            losses = np.zeros(500)
+            for i in range(500):
+                y_pred = model(x_train)
+
+                loss = loss_fn(y_pred, y_train)
+                losses[i] = loss
+                print("Loss at time step {}: {:.4f}".format(i + 1, loss.item()))
+
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
+        </code></pre>
+
+        <p class="explore-text-block">
+            Outside the loop we initialize a ndarray to hold our loss values for each epoch (loop iteration). This
+            allows us to graph it later. Inside the for loop we first make a prediction for all our x_train samples.
+            Notice we are passing in a matrix, each row being a sample that matches the input shape of our network.
+            The output is therefore a vector of predictions, a prediction for each sample (row) of our x_train input.
+            Now that we have our predictions we can work out the loss. Passing y_pred (predicted output) and y_train
+            (actual output) allows our loss function to compare how accurate or inaccurate our model was. We then save
+            the loss for later.
+        </p>
+
+        <p class="explore-text-block">
+            The line - optimizer.zero_grad() basically means that we are starting fresh when performing our
+            optimizer calculations and so ignore any calculations from the previous iteration. We will look more into
+            this when discussing gradient descent. The next line - loss.backward() performs backpropagation which at a
+            high level basically distributes responsibility across the network for what neurons are most and least
+            responsible for the inaccuracy. This is a complex area that will be discussed in detail on its' own. All
+            you need to understand for now is that it distributes responsibility for the loss across the network for
+            the optimizer to be able to best update the model to improve the model. The model at this point has not
+            changed it all, only how the model should be changed, and this is where the line optimizer.step() comes in.
+            It updates the parameters - the weights and biases of the neurons to tweak the model towards hopefully
+            more accurate predictions.
+         </p>
+
+        <p class="explore-text-block">
+            After the for loop has completed all the iterations then our model has been trained. At this point it is
+            a good idea to evaluate the model, perhaps graph some output and make some predictions on new data it has
+            never seen to evaluate the predictive accuracy.
+        </p>
+
+        <h4 class="explore-subtitle">Model Evaluation</h4>
+
+        <pre class="explore-code-block"><code class="language-python">
+            # Graph loss
+            sns.set_style("darkgrid")
+            loss_df = pd.DataFrame({'Step': range(500), 'Loss': losses})
+            ax = sns.lineplot(x='Step', y='Loss', data=loss_df)
+            plt.show()
+        </code></pre>
+
+        <p class="explore-text-block">
+            We are using seaborn, a library built on top of matplotlib that outputs very aesthetically pleasing graphs.
+            Here we set the style before creating a pandas dataframe using the loss with the number of iterations. We
+            label the graph, pass the dataframe and use plt.show() to display the image.
+        </p>
+
+        <img src="/static/templates/explore-templates/images/iris-loss.png"/>
+
+        <p class="explore-text-block">
+            Notice how the loss decreases over the 500 iterations as our model becomes more accurate in predicting the
+            correct iris flower category.
+        </p>
+
+        <pre class="explore-code-block"><code class="language-python">
+            # Test
+            y_pred = model(x_test)
+            loss = loss_fn(y_pred, y_test)
+            print("Test Loss: {:.4f}".format(loss))
+        </code></pre>
+
+        <p class="explore-text-block">
+            Next we can perform a prediction based on data our model has not yet seen. This is why we split our data up
+            earlier and have x_test and y_test.
+        </p>
+
+        <pre class="explore-code-block"><code class="language-python">
+            # Accuracy
+            pred_labels = torch.argmax(y_pred, dim=1)
+            actual_labels = torch.argmax(y_test, dim=1)
+            results = pred_labels == actual_labels
+            correct_preds = len([i for i in results if i == 1])
+            incorrect_preds = len(y_test) - correct_preds
+            accuracy = correct_preds / len(results)
+            print("Accuracy: {:.4f}".format(accuracy))
+
+            # Visualise
+            conf_matrix = confusion_matrix(actual_labels, pred_labels)
+            labels = list(set(y))
+            df_conf_matrix = pd.DataFrame(conf_matrix, index=labels, columns=labels)
+            plt.figure(figsize=(10, 7))
+            sns.set(font_scale=1.4)
+            sns.heatmap(df_conf_matrix, annot=True, annot_kws={"size": 16})
+            plt.show()
+        </code></pre>
+
+        <p class="explore-text-block">
+            The last blocks of code are evaluating the accuracy of the model along with some visualization aid. We use
+            the predictions we just made to determine how many correct and incorrect predictions there were. We also
+            determine which categories were predicted incorrectly and chart this in a confusion matrix. A confusion matrix
+            is a nice way to visualize which categories were misclassified. It not only tallies these misclassifications
+            but also what they were misclassified as. This helps us see for example if category A is being misclassified
+            as category B frequently whereas category C is often being mistaken for category A.
+        </p>
+
+        <img src="/static/templates/explore-templates/images/iris-confusion-matrix.png"/>
+
+        <h4 class="explore-subtitle">Summary</h4>
+
+        <p class="explore-text-block">
+            I hope this deep dive into one of the more basic classification examples was useful. We were able to take
+            the iris dataset and preprocess the data. We then created a model and trained the model using pytorch to
+            classify iris flowers based on a number of features of the flowers. After training our model we were then
+            able to graph the loss and visualize the accuracy of our model using seaborn. The iris flower dataset produces
+            very high accuracies and so it is a good place to start, however other datasets are less straightforward and
+            those high prediction accuracies are not so commonplace. The concepts used in this exploration are basic but
+            very useful and can be carried forward to more complex undertakings.
         </p>
 
     </div>
