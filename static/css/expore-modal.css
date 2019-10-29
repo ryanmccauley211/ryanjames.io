@@ -12,6 +12,12 @@
     margin: 4vmin 0 2vmin 0
 }
 
+.contents-heading {
+    font-size: 3.5vmin;
+    font-weight: lighter;
+    margin: 6vmin 0 2vmin 0;
+}
+
 .explore-subtitle {
     font-size: 4vmin;
     margin: 6vmin 0 4vmin 0;
@@ -39,6 +45,24 @@
     font-size: 3vmin;
     font-style: italic;
     color: #999999;
+}
+
+.contents-list {
+    list-style: circle;
+    margin-left: 7vmin;
+    margin-bottom: 7vmin;
+}
+
+.contents-list-item {
+    padding: 5px 0;
+}
+
+.contents-list-item a {
+    color: blueviolet;
+}
+
+.contents-list-item a:hover {
+    color: darkorchid;
 }
 
 .explore-text-block {

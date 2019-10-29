@@ -11,7 +11,7 @@
     grid-column: 2 / 4;
     overflow: scroll;
     justify-self: stretch;
-    margin: 20px;
+    margin: 0 20px 20px 20px;
 }
 
 .explore-sidebar {
@@ -47,7 +47,6 @@
     grid-template-columns: repeat(auto-fill, 100%);
     grid-template-rows: repeat(auto-fill, 250px);
     grid-gap: 2%;
-    overflow: scroll;
 
     margin: 2vmin 0;
 }
@@ -69,7 +68,6 @@ hr {
 }
 
 .explore-gallery-element {
-    overflow: scroll;
     border: 3px groove #9A9A9A;
     border-radius: 8px 8px;
     padding: 2vmin;

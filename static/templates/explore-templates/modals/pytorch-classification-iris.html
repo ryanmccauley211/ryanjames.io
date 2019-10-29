@@ -40,7 +40,7 @@
 
         <p class="explore-text-block"><b>Let's get started!</b> Firstly we need to import some dependencies.</p>
 
-        <pre class="explore-code-block"><code class="language-python">
+        <pre class="explore-code-block line-numbers"><code class="language-python">
             import numpy as np
             import torch
             import pandas as pd
@@ -80,7 +80,7 @@
             data.
         </p>
 
-        <pre class="explore-code-block"><code class="language-python">
+        <pre class="explore-code-block line-numbers"><code class="language-python">
             # Load dataset
             dataset = pd.read_csv("../datasets/iris.csv")
 
@@ -115,7 +115,7 @@
         </p>
 
 
-        <pre class="explore-code-block"><code class="language-python">
+        <pre class="explore-code-block line-numbers"><code class="language-python">
             [[1, 0, 0]
              [0, 1, 0]
              [0, 0, 1]]
@@ -135,7 +135,7 @@
             the encoded categorical data.
         </p>
 
-        <pre class="explore-code-block"><code class="language-python">
+        <pre class="explore-code-block line-numbers"><code class="language-python">
             # Encode labels
             lb = LabelBinarizer()
             y_encoded = lb.fit_transform(y)
@@ -164,7 +164,7 @@
             training.
         </p>
 
-        <pre class="explore-code-block"><code class="language-python">
+        <pre class="explore-code-block line-numbers"><code class="language-python">
             # Split train / test sets
             x_train, x_test, y_train, y_test = train_test_split(X.values, y_encoded, test_size=0.2)
 
@@ -204,7 +204,7 @@
             Sequential constructor takes in the networks modules.
         </p>
 
-        <pre class="explore-code-block"><code class="language-python">
+        <pre class="explore-code-block line-numbers"><code class="language-python">
             model = torch.nn.Sequential(
                 # input layer
                 torch.nn.Linear(x_train.shape[1], 16),
@@ -250,7 +250,7 @@
             add up to one.
         </p>
 
-        <pre class="explore-code-block"><code class="language-python">
+        <pre class="explore-code-block line-numbers"><code class="language-python">
             loss_fn = torch.nn.MSELoss()
             optimizer = torch.optim.SGD(model.parameters(), lr=0.03)
         </code></pre>
@@ -287,7 +287,7 @@
             episodes.
         </p>
 
-        <pre class="explore-code-block"><code class="language-python">
+        <pre class="explore-code-block line-numbers"><code class="language-python">
             # Train
             losses = np.zeros(500)
             for i in range(500):
@@ -333,7 +333,7 @@
 
         <h4 class="explore-subtitle">Model Evaluation</h4>
 
-        <pre class="explore-code-block"><code class="language-python">
+        <pre class="explore-code-block line-numbers"><code class="language-python">
             # Graph loss
             sns.set_style("darkgrid")
             loss_df = pd.DataFrame({'Step': range(500), 'Loss': losses})
@@ -354,7 +354,7 @@
             correct iris flower category.
         </p>
 
-        <pre class="explore-code-block"><code class="language-python">
+        <pre class="explore-code-block line-numbers"><code class="language-python">
             # Test
             y_pred = model(x_test)
             loss = loss_fn(y_pred, y_test)
@@ -366,7 +366,7 @@
             earlier and have x_test and y_test.
         </p>
 
-        <pre class="explore-code-block"><code class="language-python">
+        <pre class="explore-code-block line-numbers"><code class="language-python">
             # Accuracy
             pred_labels = torch.argmax(y_pred, dim=1)
             actual_labels = torch.argmax(y_test, dim=1)

@@ -1,38 +1,43 @@
 package main
 
 import (
-	"net/http"
-	"log"
-	"html/template"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
-	"os"
+	"github.com/spf13/viper"
+	"html/template"
+	"log"
+	"net/http"
 )
 
 var email string
 var pass string
 var projectTodos = map[string]TodoList{}
 
-
 func handleIndex(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("static/templates/index.html")
-	if (err != nil) {
+	if err != nil {
 		log.Fatalf("%v", err)
 	}
 	tmpl.Execute(w, nil)
 }
 
 func handleExplore(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("static/templates/explore.html", "static/templates/explore-templates/pytorch-classification-iris.html")
-	if (err != nil) {
+	tmpl, err := template.ParseFiles("static/templates/explore.html")
+
+	if err != nil {
 		log.Fatalf("%v", err)
 	}
-	tmpl.Execute(w, nil)
+	tmpl.ParseGlob("static/templates/explore-templates/modals/*.html")
+	tmpl.ParseGlob("static/templates/explore-templates/summaries/*.html")
+	err = tmpl.ExecuteTemplate(w, "explore.html", getExploreTemplateAliases(tmpl))
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
 }
 
 func handlePortfolio(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("static/templates/portfolio.html", "static/templates/project-templates/oak.html")
-	if (err != nil) {
+	if err != nil {
 		log.Fatalf("%v", err)
 	}
 	tmpl.Execute(w, projectTodos)
@@ -40,7 +45,7 @@ func handlePortfolio(w http.ResponseWriter, r *http.Request) {
 
 func handleContact(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("static/templates/contact.html")
-	if (err != nil) {
+	if err != nil {
 		log.Fatalf("%v", err)
 	}
 
@@ -55,7 +60,7 @@ func handleContact(w http.ResponseWriter, r *http.Request) {
 
 func handleAbout(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("static/templates/about.html")
-	if (err != nil) {
+	if err != nil {
 		log.Fatalf("%v", err)
 	}
 	tmpl.Execute(w, nil)
@@ -64,25 +69,26 @@ func handleAbout(w http.ResponseWriter, r *http.Request) {
 func handleSend(response *http.Request) {
 	response.ParseForm()
 	formType := response.PostFormValue("form-type")
-	if (formType == "hire") {
+	if formType == "hire" {
 		name := response.PostFormValue("first-name") + " " + response.PostFormValue("last-name") +
-			" contact: " + response.PostFormValue("contact-num");
+			" contact: " + response.PostFormValue("contact-num")
 		SendMail("Hire", name, response.PostFormValue("email"), response.PostFormValue("message"), email, pass, response.PostFormValue("contact-num"), "")
-	} else if (formType == "contribute") {
-		name := response.PostFormValue("first-name") + " " + response.PostFormValue("last-name");
-		SendMail("Contribute to " + response.PostFormValue("project-name"), name,
+	} else if formType == "contribute" {
+		name := response.PostFormValue("first-name") + " " + response.PostFormValue("last-name")
+		SendMail("Contribute to "+response.PostFormValue("project-name"), name,
 			response.PostFormValue("email"), response.PostFormValue("message"), email, pass, "", response.PostFormValue("project-name"))
-	} else if (formType == "other") {
-		name := response.PostFormValue("first-name") + " " + response.PostFormValue("last-name");
+	} else if formType == "other" {
+		name := response.PostFormValue("first-name") + " " + response.PostFormValue("last-name")
 		SendMail("General", name, response.PostFormValue("email"), response.PostFormValue("message"), email, pass, "", "")
 	}
 }
 
 func main() {
 
-	email = os.Args[1]
-	pass = os.Args[2]
+	//email = os.Args[1]
+	//pass = os.Args[2]
 
+	Init()
 	fmt.Printf("Initializing...\n")
 	getTodoList("oak", "https://github.com/ryanmccauley211/Oak/blob/master/README.md")
 
@@ -93,8 +99,19 @@ func main() {
 	http.HandleFunc("/contact", handleContact)
 	http.HandleFunc("/about", handleAbout)
 
-	fmt.Println("Serving...\n")
-	log.Fatal(http.ListenAndServe(":9000", nil))
+	host := fmt.Sprintf("%s:%s", viper.GetString("host"), viper.GetString("port"))
+	fmt.Printf("serving at port %s\n", host)
+	log.Fatal(http.ListenAndServe(host, nil))
+}
+
+func getExploreTemplateAliases(templates *template.Template) map[string]string {
+	tmplAliases := map[string]string{}
+	htmlExtensionLen := 5
+	for _, tmpl := range templates.Templates()[1:] {
+		nameKey := tmpl.Name()[:len(tmpl.Name())-htmlExtensionLen]
+		tmplAliases[nameKey] = tmpl.Name()
+	}
+	return tmplAliases
 }
 
 func getTodoList(projectName string, url string) error {

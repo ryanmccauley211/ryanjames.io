@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reactive Extension Operators</title>
+</head>
+<body>
+<div id="reactive-extensions-operators" class="explore modal">
+    <h3 id="basic-reactive-extensions-operators-title" class="explore-title">Basic Reactive Extension Operators</h3>
+    <hr class="hr-modal">
+    <p class="explore-date">21st October 2019</p>
+
+    <div class="share-icon-row">
+        <a href="https://github.com/ryanmccauley211/Oak"><img class="share-icon" src="/static/images/github-share.png"></a>
+        <a href="https://github.com/ryanmccauley211/Oak"><img class="share-icon" src="/static/images/fb-share.png"></a>
+        <a href="https://github.com/ryanmccauley211/Oak"><img class="share-icon" src="/static/images/twitter-share.png"></a>
+        <a href="https://github.com/ryanmccauley211/Oak"><img class="share-icon"
+                                                              src="/static/images/more-share.png"></a>
+        <a href="#"><img class="share-icon-padding" src="/static/images/more-share.png"></a>
+    </div>
+
+    <ul class="explore-tags-list">
+        <li class="explore-tags">python</li>
+        <li class="explore-tags">reactive programming</li>
+        <li class="explore-tags">functional</li>
+        <li class="explore-tags">reactive extensions</li>
+        <li class="explore-tags">lambda</li>
+    </ul>
+
+    <p class="explore-text-block">
+        The mantra of reactive programming is that anything can be a stream. As data flows through the stream they can
+        be manipulates using <b>operators</b>. It is in this section we will discuss some basic operators and show some
+        examples. We will be using a python implementation of reactive extensions -
+        <a href="https://github.com/ReactiveX/RxPY">Reactive X</a> (RxPy). RxPy is one implementation of reactive
+        extensions, there are many implementations in other languages such as reactor in java and other Rx flavours
+        in scala, c++, javascript and more.
+    </p>
+
+    <h4 class="contents-heading">Contents</h4>
+    <ul class="contents-list">
+        <li class="contents-list-item"><a href="#map">Map</a></li>
+        <li class="contents-list-item"><a href="#filter">Filter</a></li>
+        <li class="contents-list-item"><a href="#flatmap">Flatmap</a></li>
+        <li class="contents-list-item"><a href="#firstlast">First and Last</a></li>
+        <li class="contents-list-item"><a href="#buffer">Buffer</a></li>
+        <li class="contents-list-item"><a href="#take">Take and Take Last</a></li>
+        <li class="contents-list-item"><a href="#distinct">Distince</a></li>
+        <li class="contents-list-item"><a href="#conclusion">Conclusion</a></li>
+    </ul>
+
+    <p class="explore-text-block">
+        We begin with importing rx.
+    </p>
+
+    <pre class="explore-code-block line-numbers">
+        <code class="language-python">
+            import rx
+            from rx import operators as ops
+        </code>
+    </pre>
+
+    <h4 id="map" class="explore-subtitle">Map</h4>
+
+    <p class="explore-text-block">
+        Map is the operator you will use most along with filter and is one of the simplest to understand. Map simply
+        transforms data as it passes through the stream. This can be as simple as converting between types, or
+        passing the data through a function that returns the transformed data.
+    </p>
+
+    <pre class="explore-code-block line-numbers">
+        <code class="language-python">
+            # Map
+            source = rx.of(0, 1, 2, 3, 4, 5)
+            source.pipe(
+                ops.map(lambda number: number**2)
+            ).subscribe(
+                lambda number: print(number),
+                lambda error: print(error),
+                lambda: print("Done")
+            )
+        </code>
+    </pre>
+
+    <pre class="explore-code-block line-numbers">
+        <code class="language-python">
+            0
+            1
+            4
+            9
+            16
+            25
+            Done
+        </code>
+    </pre>
+
+    <p class="explore-text-block">
+        Here is a very simple example where the map transforms integers by squaring them. Most of the time you can
+        perform these maps in one line. More complicated mappings can call a mapper function (takes an input and outputs
+        the transformed return value).
+    </p>
+
+    <h4 id="filter" class="explore-subtitle">Filter</h4>
+
+    <p class="explore-text-block">
+        Filter is another common operator that does what it says. It filters data coming through the stream based on a
+        predicate. This basically means that you simply need to take the value coming through the stream and return true
+        if you want it to continue through the stream or return false if you want to filter it out. You have full
+        control with this operator what data get passed along the stream and what is discarded. In the example below
+        we only allow even numbers to flow through, odd numbers will be filtered out.
+    </p>
+
+    <pre class="explore-code-block line-numbers">
+        <code class="language-python">
+            # Filter
+            source = rx.of(0, 1, 2, 3, 4, 5)
+            source.pipe(
+                ops.filter(lambda number: number % 2 == 0)
+            ).subscribe(
+                lambda number: print(number),
+                lambda error: print(error),
+                lambda: print("Done")
+            )
+        </code>
+    </pre>
+
+    <pre class="explore-code-block line-numbers">
+        <code class="language-python">
+            0
+            2
+            4
+            Done
+        </code>
+    </pre>
+
+    <h4 id="flatmap" class="explore-subtitle">Flatmap</h4>
+
+    <p class="explore-text-block">
+        Flat map is similar to map in that you transform the data passing through the stream, however it has also
+        includes a flattening of the observables. What flatten refers to is to flatten multiple observables into a
+        single observable. This means that if the mapping function returns an observable rather than a regular value,
+        then the values emitted by the observable would be passed down the stream rather than the value wrapped in an
+        observable.
+
+        Imagine a simple library that has books that can be accessed with book ids. We have a list of book ids and want
+        to get the books from the library that correspond to the book ids. The book ids are a stream of observables.
+        We call a librarian function that maps these book ids to to books, also as a stream of observables. Let's try
+        that now and print the results.
+    </p>
+
+    <pre class="explore-code-block line-numbers">
+        <code class="language-python">
+            #Map should have been flatmap
+            book_ids = range(0, 10)
+            library = [(1, "Dracula"), (2, "Harry Potter"), (3, "The Divine Comedy")]
+
+            def fetch_book_by_id(book_id):
+                return rx.from_iterable(library).pipe(
+                    ops.filter(lambda book_record: book_record[0] == book_id),
+                    ops.map(lambda book_record: book_record[1])
+                )
+
+
+            source = rx.from_iterable(book_ids)
+            source.pipe(
+                ops.map(lambda book_id: fetch_book_by_id(book_id))
+            ).subscribe(
+                lambda number: print(number),
+                lambda error: print(error),
+                lambda: print("Done")
+            )
+        </code>
+    </pre>
+
+    <pre class="explore-code-block line-numbers">
+        <code class="language-python">
+            &lt;rx.core.observable.observable.Observable object at 0x108a79490&gt;
+            &lt;rx.core.observable.observable.Observable object at 0x108a79350&gt;
+            &lt;rx.core.observable.observable.Observable object at 0x108a793d0&gt;
+            &lt;rx.core.observable.observable.Observable object at 0x108a79390&gt;
+            &lt;rx.core.observable.observable.Observable object at 0x108a791d0&gt;
+            &lt;rx.core.observable.observable.Observable object at 0x108a79490&gt;
+            &lt;rx.core.observable.observable.Observable object at 0x108a79350&gt;
+            &lt;rx.core.observable.observable.Observable object at 0x108a793d0&gt;
+            &lt;rx.core.observable.observable.Observable object at 0x108a79390&gt;
+            &lt;rx.core.observable.observable.Observable object at 0x108a791d0&gt;
+            Done
+        </code>
+    </pre>
+
+    <p class="explore-text-block">
+        Notice we have mapped our book_ids not to the books we want, but books wrapped in observables. We only have
+        three books in the library and therefore many of these observables do not even hold books as filter has not
+        actually been applied. Remember that these are cold (lazy) observables and will not do anything, including
+        perform the filter operator, until we subscribe to them.
+
+        We obviously do not want to subscribe to these 10 observables individually to get our books. This is where
+        flatmap comes in. It will flatten the nested observables into one so that when we subscribe we get our book
+        values rather than the values wrapped in the nested observable. This will also trigger the librarian function's
+        observables to perform their operations that will filter then map the library based on the book ids passed in.
+    </p>
+
+    <pre class="explore-code-block line-numbers">
+        <code class="language-python">
+            # Flatmap
+            book_ids = range(0, 10)
+            library = [(1, "Dracula"), (2, "Harry Potter"), (3, "The Divine Comedy")]
+
+            def fetch_book_by_id(book_id):
+                return rx.from_iterable(library).pipe(
+                    ops.filter(lambda book_record: book_record[0] == book_id),
+                    ops.map(lambda book_record: book_record[1])
+                )
+
+
+            source = rx.from_iterable(book_ids)
+            source.pipe(
+                ops.flat_map(lambda book_id: fetch_book_by_id(book_id))
+            ).subscribe(
+                lambda number: print(number),
+                lambda error: print(error),
+                lambda: print("Done")
+            )
+        </code>
+    </pre>
+
+    <pre class="explore-code-block line-numbers">
+        <code class="language-python">
+            Dracula
+            Harry Potter
+            The Divine Comedy
+            Done
+        </code>
+    </pre>
+
+    <h4 id="firstlast" class="explore-subtitle">First and Last</h4>
+
+    <p class="explore-text-block">
+        These operators do what they say, <b>first</b> emits only the first item in an observable. It has an optional predicate
+        that functions the same way as filter, it means instead of emitting the first item you can emit the first item
+        that meets a condition.
+    </p>
+
+    <pre class="explore-code-block line-numbers">
+        <code class="language-python">
+            # First
+            source = rx.of(0, 1, 2, 3, 4, 5)
+            source.pipe(
+                ops.first()
+            ).subscribe(
+                lambda number: print(number),
+                lambda error: print(error),
+                lambda: print("Done\n")
+            )
+        </code>
+    </pre>
+
+    <pre class="explore-code-block line-numbers">
+        <code class="language-python">
+            0
+            Done
+        </code>
+    </pre>
+
+    <p class="explore-text-block">
+        The <b>last</b> operator emits the last item in a stream, like first it also allows you to use a condition to
+        emit the last item that meets that condition. Here we emit the last even number.
+    </p>
+
+    <pre class="explore-code-block line-numbers">
+        <code class="language-python">
+            # last
+            source = rx.of(0, 1, 2, 3, 4, 5)
+            source.pipe(
+                ops.last(lambda number: number % 2 == 0)
+            ).subscribe(
+                lambda number: print(number),
+                lambda error: print(error),
+                lambda: print("Done\n")
+            )
+        </code>
+    </pre>
+
+    <pre class="explore-code-block line-numbers">
+        <code class="language-python">
+            4
+            Done
+        </code>
+    </pre>
+
+    <h4 id="buffer" class="explore-subtitle">Buffer</h4>
+
+    <p class="explore-text-block">
+        <b>Buffer</b> allows us to buffer emitted items until a condition is met and then emit them all at once as a
+        collection. There are different flavours of buffer we will go into another time, but for now we will show an
+        example with <b>buffer_with_count</b>. This buffers a <i>n</i> emitted items and then releases them as a
+        collection. Imagine we had a stream of binary values and wanted to group them into bytes (groups of 8 bits).
+        Let's try that with the buffer operator.
+    </p>
+
+    <pre class="explore-code-block line-numbers">
+        <code class="language-python">
+            # Buffer
+
+            binary_input_str = "01000101011110000110000101101101011100000110110001100101"
+            binary_digits = [i for i in binary_input_str]
+
+            source = rx.from_iterable(binary_digits).pipe(
+                ops.buffer_with_count(8),
+                ops.map(lambda bits_of_a_byte: "".join(bits_of_a_byte))
+            ).subscribe(
+                lambda byte: print(byte),
+                lambda error: print(error),
+                lambda: print("Done\n")
+            )
+        </code>
+    </pre>
+
+    <pre class="explore-code-block line-numbers">
+        <code class="language-python">
+            01000101
+            01111000
+            01100001
+            01101101
+            01110000
+            01101100
+            01100101
+            Done
+        </code>
+    </pre>
+
+    <p class="explore-text-block">
+        Here we have a long string of binary. We split it into a list of bits then create an observable from the bits.
+        The bits will be emitted one by one, in other words bit by bit. Using buffer we emit them byte by byte. If we
+        left it at that it would emit them as lists of length 8. Instead we use map to join the lists and emit them as
+        strings instead. You can see how useful these operators are when they are combined and how tidy it keeps the
+        code making it clean and readable.
+    </p>
+
+    <h4 id="take" class="explore-subtitle">Take and Take Last</h4>
+
+    <p class="explore-text-block">
+        Take will take the first <i>n</i> elements emitted from an observable. Take last will take the last <i>n</i>
+        elements that are emitted. Here we will combine these two operators to perform binary search. Binary search is
+        an algorithm for searching for an item in a sorted collection. The value we are looking for will be referred to
+        as the needle, and the collection will be referred to as the haystack.
+    </p>
+
+    <p class="explore-text-block" style="text-align: center"><i>"Finding a needle in a haystack"</i></p>
+
+    <p class="explore-text-block">
+        Here are the steps of the algorithm: <br><br>
+
+        1) Take in a value that will be the needle to search the haystack for <br>
+        2) Get the middle value of the haystack (for an even sized haystack take either of the two middle values,
+        it doesn't matter which) <br>
+        3) If the middle value is the needle, we are done. Return the needle.
+        4) If the needle value is higher than the middle value, discard the middle value and the bottom half of the
+        haystack. If the needle value is lower, then discard the middle value and all values higher than the middle
+        value.
+        5) Go back to step 2.
+    </p>
+
+    <p class="explore-text-block">
+        This is a recursive algorithm as you can see we loop back to step 2, this algorithm is incomplete as it does
+        not take care of certain cases and assumes the needle exists in the haystack, however that is fine for our
+        purposes. Let's look at a reactive implementation of this algorithm. We do not want to cheat and simply return
+        the needle so we return variable middle when it matches needle and to be sure it is the correct one, we check it
+        outside the method with the original needle passed in.
+    </p>
+
+    <pre class="explore-code-block line-numbers">
+        <code class="language-python">
+            # take and take last
+
+            def take_first(haystack, n):
+                return rx.from_iterable(haystack).pipe(
+                    ops.take(n),
+                    ops.buffer_with_count(n)
+                )
+
+            def take_last(haystack, n):
+                return rx.from_iterable(haystack).pipe(
+                    ops.take_last(n),
+                    ops.buffer_with_count(n)
+                )
+
+            def find_needle(haystack, needle):
+                middle = haystack[len(haystack) // 2]
+                if needle == middle:
+                    return rx.of(middle)
+                elif needle < middle:
+                    return take_first(haystack, len(haystack) // 2).pipe(
+                        ops.do_action(lambda haystack: print("Haystack size is ", len(haystack))),
+                        ops.flat_map(lambda haystack: find_needle(haystack, needle)))
+                else:
+                    return take_last(haystack, len(haystack) // 2).pipe(
+                        ops.do_action(lambda haystack: print("Haystack size is ", len(haystack))),
+                        ops.flat_map(lambda haystack: find_needle(haystack, needle)))
+
+
+            haystack = [i for i in range(0, 1000)]
+            needle = random.choice(haystack)
+            print("Haystack size is ", len(haystack))
+            rx.of(haystack).pipe(
+                ops.flat_map(lambda haystack: find_needle(haystack, needle))
+            ).subscribe(
+                lambda found_needle: print(f"\nThe needle found is {found_needle}. The original needle was {needle}"),
+                lambda error: print(error),
+                lambda: print("Done\n")
+            )
+        </code>
+    </pre>
+
+    <pre class="explore-code-block line-numbers">
+        <code class="language-python">
+            Haystack size is  1000
+            Haystack size is  500
+            Haystack size is  250
+            Haystack size is  125
+            Haystack size is  62
+            Haystack size is  31
+            Haystack size is  15
+            Haystack size is  7
+            Haystack size is  3
+            Haystack size is  1
+
+            The needle found is 124. The original needle was 124
+            Done
+        </code>
+    </pre>
+
+    <p class="explore-text-block">
+        This use of operators is more complicated than the last few so let's talk it through a little. The functions
+        take_first and take_last take the first n and the last n elements emitted respectively, thereby returns a
+        truncated haystack. The equivalent that python's <span><code class="language-python">list[:n]</code></span>,
+        <span><code class="language-python">list[n:]</code></span> slices do. This is then fed back into
+        <span><code class="language-python">find_needle(haystack, needle)</code></span> with the truncated haystack
+        recursively until the needle is found. The operator
+        <span><code class="language-python">do_action(...)</code></span> is called a side effect. This is discussed in
+        more detail in another exploration, however for now just think of it simply as performing an action that has
+        nothing to do with the stream. It doesn't affect the flow of data, simply logs the length of haystack.
+    </p>
+
+    <p class="explore-text-block">
+        Notice all the methods are returning observables so we flatten them with flatmap and do not subscribe inside
+        the method. This is very neat as we have simply set everything up but do not need to perform this algorithm
+        until an observer who needs it calls subscribe. A few different observers are observing different observables
+        and all <b>react</b> in their own way once a value is emitted. The calls to take_first and take_last from inside
+        find_needle react by printing the length of the haystack and recursively calling find_needle with the truncated
+        haystack. The global scope that originally calls find_needle reacts by printing the found needle.
+    </p>
+
+    <h4 id="distinct" class="explore-subtitle">Distinct</h4>
+
+    <p class="explore-text-block">
+        If you do not want to emit duplicates <b>distinct</b> is the operator that accomplishes that, kind of like
+        passing duplicates into a set, it will ignore them. If you use distinct as is with no arguments it will
+        determine what is to be considered a duplicate using the == operator. There is also optional parameters to
+        pass in a key mapper to computer the comparison key for each element, if you want to hash it for example, and
+        a comparer that specifies how elements should be compared for equality.
+    </p>
+
+    <pre class="explore-code-block line-numbers">
+        <code class="language-python">
+            # Distinct
+
+            source = rx.of("cat", "Cat", "CAT", "dog", "dOg", "DOG")
+            source.pipe(
+                ops.distinct(lambda x: x, lambda a, b: str.lower(a) == str.lower(b))
+            ).subscribe(
+                lambda number: print(number),
+                lambda error: print(error),
+                lambda: print("Done\n")
+            )
+        </code>
+    </pre>
+
+    <pre class="explore-code-block line-numbers">
+        <code class="language-python">
+            cat
+            dog
+            Done
+        </code>
+    </pre>
+
+    <p class="explore-text-block">
+        As you can see we have cat's and dogs but want to remove duplicates. We pass in a custom comparer to make sure
+        that the comparison is case insensitive.
+    </p>
+
+    <h3 id="conclusion" class="explore-subtitle">Complete code</h3>
+
+    <pre class="explore-code-block line-numbers"
+         data-src="static/code/basic-reactive-extension-operators.py" data-download-link>
+    </pre>
+
+    <h3 id="conclusion" class="explore-subtitle">Conclusion</h3>
+
+    <p class="explore-text-block">
+        Reactive extensions include many useful operators. The ability to chain them together makes them very powerful
+        and a lot can be accomplished in a few lines of code. In this exploration we covered the most basic and common
+        operators you will use. We will cover others in other explorations, including the different ways streams can
+        be combined with each other and various ways to work with multiple streams that you want to interact in some
+        way. We only discussed the python implementation here but remember that almost all the most popular languages
+        have their own implementation and will look very similar and do very similar operations than those discussed
+        here.
+    </p>
+</div>
+</body>
+</html>
