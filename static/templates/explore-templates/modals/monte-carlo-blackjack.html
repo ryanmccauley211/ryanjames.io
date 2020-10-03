@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Blackjack with Monte Carlo Learning</title>
+</head>
+<body>
+<div id="explore-monte-carlo-blackjack" class="explore modal">
+    <h3 id="pytorch-classification-iris-1-title" class="explore-title">Blackjack with Monte Carlo Learning</h3>
+    <hr class="hr-modal">
+    <p class="explore-date">27th September 2020</p>
+
+    <div class="share-icon-row">
+        <a href="https://github.com/ryanmccauley211/Blackjack_Q_Agent"><img class="share-icon" src="/static/images/github-share.png"></a>
+        <a href="https://github.com/ryanmccauley211/Blackjack_Q_Agent"><img class="share-icon" src="/static/images/fb-share.png"></a>
+        <a href="https://github.com/ryanmccauley211/Blackjack_Q_Agent"><img class="share-icon" src="/static/images/twitter-share.png"></a>
+        <a href="https://github.com/ryanmccauley211/Blackjack_Q_Agent"><img class="share-icon" src="/static/images/more-share.png"></a>
+        <a href="#"><img class="share-icon-padding" src="/static/images/more-share.png"></a>
+    </div>
+
+    <ul class="explore-tags-list">
+        <li class="explore-tags">monte carlo</li>
+        <li class="explore-tags">blackjack</li>
+        <li class="explore-tags">reinforcement learning</li>
+        <li class="explore-tags">python</li>
+        <li class="explore-tags">numpy</li>
+    </ul>
+
+    <h4 class="explore-subtitle">Introduction</h4>
+    <p class="explore-text-block">
+        Monte carlo is a technique used in reinforcement learning that concerns episodic tasks. Episodic
+        simply means that the task has a well defined beginning and end, in contrast to a continuous task
+        that could keep going. We also do not have a model of the environment, the agent will learn from
+        experience without needing a model of the environment and therefore will be a <b>model-free</b>
+        approach that does not try to predict the next state.
+    </p>
+
+    <h4 class="explore-subtitle">Blackjack Basics</h4>
+    <p class="explore-text-block">
+        Let's take a quick preview of what we are going to do before we start implementing it. The goal of
+        blackjack is to simply get closer to 21 than your' opponent without going over 21. The player will
+        begin with two cards and in each round can stick with their current hand or take another card. That
+        is the basic idea, and so our agent will need to learn when they should take another card or not based on
+        their current hand. If the agent holds a total of 20 in their hand it is usually a very bad idea to
+        take another card as only an ace could bring the total to 21, on the other hand they should not
+        be sticking at 7 or 8 for example. The agent will not know this in advance and so will need to learn
+        it from experience
+    </p>
+
+    <h4 class="explore-subtitle">Agent Goals</h4>
+    <p class="explore-text-block">
+        This experience will be gained by making random actions and at the end of an episode (end of a single game)
+        the agent will get a reward of 1 if it wins, a 0 otherwise. This is the interesting part, there could
+        have been 3, 4 or more moves before the game ends, so the agent will need to decide what states contributed
+        to the win / draw / loss result. It will do this by taking the rewards and propogating it back through
+        each state, gradually decreasing the amount of the reward. We decrease the reward as newer states are
+        likely to be the most important moves and reward should be weighted in favour of the most recent states.
+        It is the last card that either takes you over 21 or most likely won the round so it gets the most credit.
+    </p>
+
+    <p class="explore-text-block">
+        Finally we keep a map of all the possible states as blackjack's state space is relatively small and
+        manageable so we will fill this map with the state values, and then test this map we created with
+        a game to check the agent's progress.
+    </p>
+
+    <h4 class="explore-subtitle">Implementation</h4>
+    <p class="explore-text-block">
+        Let's begin by importing dependencies and setting up some constants
+    </p>
+
+    <pre class="explore-code-block line-numbers"><code class="language-python">
+        import gym
+        import numpy as np
+        import matplotlib.pyplot as plt
+
+        gym_id = "Blackjack-v0"
+        env = gym.make(gym_id)
+        action_space = env.action_space.n
+        obs_shape = tuple(dim.n for dim in env.observation_space.spaces)
+        gamma = 0.6
+        learning_rate = 0.1
+    </code></pre>
+
+    <p class="explore-text-block">
+        We import our dependencies, set up the environment and some constants. The gamma parameter is used
+        for discounting the rewards. Remember that after each episode we propagate the reward back, but
+        we reduce the reward the gamma factor for each state. This means that more recent states will get
+        most of the credit for winning the round, while still giving some credit for the initial moves that
+        led up to it. The learning rate is used when we update states to take a small step towards the
+        last state value, rather than simply replacing the current state value with a new state value. This
+        ensure we don't simply disregard previous episodes and let the agent's experience constantly nudge the
+        values into a more accurate average value.
+    </p>
+
+    <pre class="explore-code-block line-numbers"><code class="language-python">
+        class Agent:
+
+            def __init__(self):
+                self.value_table = np.zeros((obs_shape[0], obs_shape[1], obs_shape[2], action_space))
+
+            def action(self, state, training=True):
+                if training:
+                    return np.random.randint(0, action_space)
+                else:
+                    return np.argmax(self.value_table[state[0]][state[1]][int(state[2])])
+
+            def learn(self, state_actions, reward):
+                for state_action in sorted(state_actions, reverse=True):
+                    state, action = state_action
+                    curr_count_dim = state[0]
+                    opp_card_dim = state[1]
+                    has_ace_dim = int(state[2])
+                    state_val = self.value_table[curr_count_dim][opp_card_dim][has_ace_dim][action]
+
+                    q_val = state_val + learning_rate * reward
+                    self.value_table[curr_count_dim][opp_card_dim][has_ace_dim][action] = q_val
+                    reward *= gamma
+    </code></pre>
+
+    <p class="explore-text-block">
+        Above is the Agent class where the learning algorithm is implemented and the value table that
+        we use to keep track of the expected value of being in that state. Let's look at each block and
+        break it down.
+    </p>
+
+    <pre class="explore-code-block line-numbers"><code class="language-python">
+        def __init__(self):
+            self.value_table = np.zeros((obs_shape[0], obs_shape[1], obs_shape[2], action_space))
+    </code></pre>
+
+    <p class="explore-text-block">
+        The init method creates a numpy array that represents our value table. It contains all the possible
+        states from our observation space. There are 4 dimensions to the observation space that the table
+        will keep track of
+    </p>
+
+    <p class="tab">- obs_shape[0] is the value of our current hand, e.g. the best hand has a value of 21</p>
+    <p class="tab">- obs_shape[1] represents the one card showing in the dealer's hand</p>
+    <p class="tab">- obs_shape[2] is a a boolean for if the agent has an ace or not</p>
+    <p class="tab">- action space represents our two possible actions, either stick or hit</p>
+
+    <p class="explore-text-block">
+        With a place in our array for every possible state we are ready to begin tracking the estimated
+        value of each state.
+    </p>
+
+    <pre class="explore-code-block line-numbers"><code class="language-python">
+        def learn(self, state_actions, reward):
+            for state_action in sorted(state_actions, reverse=True):
+                state, action = state_action
+                curr_count_dim = state[0]
+                opp_card_dim = state[1]
+                has_ace_dim = int(state[2])
+                state_val = self.value_table[curr_count_dim][opp_card_dim][has_ace_dim][action]
+
+                q_val = state_val + learning_rate * reward
+                self.value_table[curr_count_dim][opp_card_dim][has_ace_dim][action] = q_val
+                reward *= gamma
+    </code></pre>
+
+    <p class="explore-text-block">
+        This is the learning phase, notice first that we cycle through the states in reverse order.
+        Remember we begin at the most recent state and then propagate the reward back through each
+        previous state in the episode. This is why we loop through states in reverse chronological
+        order. The bulk of the method is fetching values from each dimension in the state. Let's
+        focus on the actual learning algorithm.
+    </p>
+
+    <pre class="explore-code-block line-numbers"><code class="language-python">
+        state_val = self.value_table[curr_count_dim][opp_card_dim][has_ace_dim][action]
+
+        q_val = state_val + learning_rate * reward
+        self.value_table[curr_count_dim][opp_card_dim][has_ace_dim][action] = q_val
+        reward *= gamma
+    </code></pre>
+
+    <p class="explore-text-block">
+        We begin by getting the current value of that state which we fetch from our table. Next
+        we calculate the updated value, this uses a simple update formula that basically takes the
+        current value and uses the current reward to take a step towards an updated value. If the
+        current state value was 0, and our reward was 1 we would have 0 + 0.1 * 1 = 0.1. See that it
+        doesn't completely erase the initial state value but instead steps towards a hopefully more
+        accurate one. We then update the state with the new value. The final step we reduce the reward
+        using our discount factor 'gamma' before we cycle back to the previous state, this reduces the
+        reward at each loop for older states.
+    </p>
+
+    <p class="explore-text-block">
+        Next we have our game loop which is simply a standard loop that runs the game and learning phase
+        n times while keeping a track of state, action and reward for each episode. After each episode
+        the agent will do a single learning phase, this continues for each episode.
+    </p>
+
+    <pre class="explore-code-block line-numbers"><code class="language-python">
+        def run_game(player, episodes, training=True):
+            # loss | draw | win
+            results = list([0, 0, 0])
+            for episode in range(episodes):
+
+                state = env.reset()
+                reward = 0
+                done = False
+                episode_memory = []
+                while not done:
+                    action = player.action(state, training)
+                    next_state, reward, done, _ = env.step(action)
+
+                    episode_memory.append((state, action))
+
+                    state = next_state
+
+                results[int(reward) + 1] += 1
+                player.learn(episode_memory, reward)
+                print("Win rate: {}".format(get_result_rate(sum(results), results[2])))
+                print("Draw rate: {}".format(get_result_rate(sum(results), results[1])))
+                print("Loss rate: {}\n\n".format(get_result_rate(sum(results), results[0])))
+
+            return results
+    </code></pre>
+
+    <p class="explore-text-block">
+        Finally below we have our entry point along with some helper methods and plotting functionality
+    </p>
+
+    <pre class="explore-code-block line-numbers"><code class="language-python">
+        def get_result_rate(total, result_count):
+            if result_count == 0:
+                return 0
+            return result_count / total
+
+
+        def get_autopct_perc():
+            def get_perc(value):
+                return '{p:.2f}%'.format(p=value)
+
+            return get_perc
+
+
+        if __name__ == "__main__":
+            player = Agent()
+            training_results = run_game(player, 10000)
+            test_results = run_game(player, 10000, training=False)
+
+            plt.subplot(1, 2, 1)
+            plt.pie(training_results, labels=["Loss", "Draw", "Win"], autopct=get_autopct_perc())
+            plt.title("Training Results")
+            plt.subplot(1, 2, 2)
+            plt.pie(test_results, labels=["Loss", "Draw", "Win"], autopct=get_autopct_perc())
+            plt.title("Blackjack Results")
+            plt.savefig("blackjack_results_pie.png")
+    </code></pre>
+
+    <p class="explore-text-block">
+        This is a simple agent and doesn't require any neural networks or deep learning and so will be
+        fast to run even on a cpu. See below the results. The pie chart on the left shows performance
+        of an untrained agent that takes random actions. The second shows the performance of our trained
+        agent. We can see quite a substantial improvement, and without tactics such as counting cards,
+        any average win rate over 40% is a good score for a player as the dealer will have an edge in a
+        game of blackjack.
+    </p>
+
+    <img src="/static/images/blackjack_results_pie.png"/>
+</div>
+
+</body>
+</html>

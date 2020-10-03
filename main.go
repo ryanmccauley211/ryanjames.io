@@ -13,61 +13,59 @@ var email string
 var pass string
 var projectTodos = map[string]TodoList{}
 
-func handleIndex(w http.ResponseWriter, r *http.Request) {
+func handleIndex(w http.ResponseWriter, _ *http.Request) {
 	tmpl, err := template.ParseFiles("static/templates/index.html")
-	if err != nil {
-		log.Fatalf("%v", err)
-	}
-	tmpl.Execute(w, nil)
+	checkCriticalErr(err)
+	checkCriticalErr(tmpl.Execute(w, nil))
 }
 
-func handleExplore(w http.ResponseWriter, r *http.Request) {
+func handleExplore(w http.ResponseWriter, _ *http.Request) {
 	tmpl, err := template.ParseFiles("static/templates/explore.html")
 
-	if err != nil {
-		log.Fatalf("%v", err)
-	}
-	tmpl.ParseGlob("static/templates/explore-templates/modals/*.html")
-	tmpl.ParseGlob("static/templates/explore-templates/summaries/*.html")
+	checkCriticalErr(err)
+	_, err = tmpl.ParseGlob("static/templates/explore-templates/modals/*.html")
+	checkCriticalErr(err)
+
+	_, err = tmpl.ParseGlob("static/templates/explore-templates/summaries/*.html")
+	checkCriticalErr(err)
+
 	err = tmpl.ExecuteTemplate(w, "explore.html", getExploreTemplateAliases(tmpl))
-	if err != nil {
-		log.Fatalf("%v", err)
-	}
+	checkCriticalErr(err)
 }
 
-func handlePortfolio(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("static/templates/portfolio.html", "static/templates/project-templates/oak.html")
-	if err != nil {
-		log.Fatalf("%v", err)
-	}
-	tmpl.Execute(w, projectTodos)
+func handlePortfolio(w http.ResponseWriter, _ *http.Request) {
+	tmpl, err := template.ParseFiles("static/templates/portfolio.html")
+	checkCriticalErr(err)
+
+	_, err = tmpl.ParseGlob("static/templates/portfolio-templates/modals/*.html")
+	checkCriticalErr(err)
+
+	_, err = tmpl.ParseGlob("static/templates/portfolio-templates/summaries/*.html")
+	checkCriticalErr(err)
+
+	checkCriticalErr(tmpl.Execute(w, projectTodos))
 }
 
 func handleContact(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("static/templates/contact.html")
-	if err != nil {
-		log.Fatalf("%v", err)
-	}
+	checkCriticalErr(err)
 
 	formSubmitted := false
 	if r.Method == "POST" {
 		handleSend(r)
 		formSubmitted = true
 	}
-
-	tmpl.Execute(w, formSubmitted)
+	checkCriticalErr(tmpl.Execute(w, formSubmitted))
 }
 
-func handleAbout(w http.ResponseWriter, r *http.Request) {
+func handleAbout(w http.ResponseWriter, _ *http.Request) {
 	tmpl, err := template.ParseFiles("static/templates/about.html")
-	if err != nil {
-		log.Fatalf("%v", err)
-	}
-	tmpl.Execute(w, nil)
+	checkCriticalErr(err)
+	checkCriticalErr(tmpl.Execute(w, nil))
 }
 
 func handleSend(response *http.Request) {
-	response.ParseForm()
+	checkCriticalErr(response.ParseForm())
 	formType := response.PostFormValue("form-type")
 	if formType == "hire" {
 		name := response.PostFormValue("first-name") + " " + response.PostFormValue("last-name") +
@@ -90,7 +88,7 @@ func main() {
 
 	Init()
 	fmt.Printf("Initializing...\n")
-	getTodoList("oak", "https://github.com/ryanmccauley211/Oak/blob/master/README.md")
+	checkCriticalErr(getTodoList("oak", "https://github.com/ryanmccauley211/Oak/blob/master/README.md"))
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.HandleFunc("/", handleIndex)
@@ -124,9 +122,9 @@ func getTodoList(projectName string, url string) error {
 		if err != nil {
 			log.Fatal(err)
 		}
-		checkedTasks := []string{}
-		uncheckedTasks := []string{}
-		delTasks := []string{}
+		var checkedTasks []string
+		var uncheckedTasks []string
+		var delTasks []string
 		doc.Find(".contains-task-list li").Each(func(i int, s *goquery.Selection) {
 			input := s.Find("input")
 			_, checked := input.Attr("checked")
@@ -150,4 +148,10 @@ type TodoList struct {
 	Unchecked []string
 	Deleted   []string
 	Loaded    bool
+}
+
+func checkCriticalErr(err error) {
+	if err != nil {
+		panic(err)
+	}
 }

@@ -1,0 +1,78 @@
+<div id="oak-project-container" class="project-container modal">
+
+    <div id="oak-project" class="project">
+
+        <div class="project-title-row">
+            <h3 id="oak-title" class="project-title">Oak</h3>
+            <hr class="hr-modal">
+        </div>
+
+        <div class="project-summary-row">
+            <div class="project-summary-media">
+                <a href="https://www.youtube.com/watch?v=2veW9yznFdU" data-lity><img class="project-img-thumbnail" src="https://img.youtube.com/vi/2veW9yznFdU/hqdefault.jpg"></a>
+            </div>
+            <div class="project-info">
+                <ul class="project-languages">
+                    <li class="project-language">java</li>
+                    <li class="project-language">maven</li>
+                </ul>
+                <div class="share-icon-row">
+                    <a href="https://github.com/ryanmccauley211/Oak"><img class="share-icon" src="/static/images/github-share.png"></a>
+                    <a href="https://github.com/ryanmccauley211/Oak"><img class="share-icon" src="/static/images/fb-share.png"></a>
+                    <a href="https://github.com/ryanmccauley211/Oak"><img class="share-icon" src="/static/images/twitter-share.png"></a>
+                    <a href="https://github.com/ryanmccauley211/Oak"><img class="share-icon" src="/static/images/more-share.png"></a>
+                    <a href="#"><img class="share-icon-padding" src="/static/images/more-share.png"></a>
+                </div>
+                <p class="project-description">
+                    Oak is a way of creating ocarina video and PDF tutorials.
+                    It takes a midi file and maps the notes to ocarina tabs
+                    and processes them into a complete tutorials.
+                </p>
+            </div>
+        </div>
+
+        <div class="project-features-row">
+            <div class="project-features">
+                <h5 class="project-subheader">Features</h5>
+                <ul class="project-feature-list">
+                    <li>Outputs an mp4 and/or a PDF with ocarina tabs.</li>
+                    <li>Packaged with an ocarina soundfont to output realistic audio</li>
+                    <li>Add your own custom background</li>
+                    <li>Frame rate and audio offset can be set to fine-tune video/audio sync.</li>
+                    <li>Add custom text to introduce the video, useful for including website links and contact info.</li>
+                </ul>
+            </div>
+            <div></div>
+        </div>
+
+        <div class="project-todo-row">
+            <div class="project-todos">
+                {{if .oak.Loaded}}
+                    <h5 class="project-subheader">Progress</h5>
+                    <ul id="oak-todo" class="todo-list">
+                    {{range $completedItem := .oak.Checked}}
+                        <li class="todo-item todo-checked-item">
+                            <input type="checkbox" id disabled checked>
+                        {{$completedItem}}
+                        </li>
+                    {{end}}
+                    {{range $todoItem := .oak.Unchecked}}
+                        <li class="todo_item todo_unchecked_item">
+                            <input type="checkbox" id disabled>
+                        {{$todoItem}}
+                        </li>
+                    {{end}}
+                    {{range $delItem := .oak.Deleted}}
+                        <li class="todo_item todo_deleted_item">
+                            <input type="checkbox" id disabled>
+                            <del>
+                            {{$delItem}}
+                            </del>
+                        </li>
+                    {{end}}
+                    </ul>
+                {{end}}
+            </div>
+        </div>
+    </div>
+</div>
