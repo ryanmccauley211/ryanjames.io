@@ -98,7 +98,7 @@ func main() {
 	http.HandleFunc("/about", handleAbout)
 
 	host := fmt.Sprintf("%s:%s", viper.GetString("host"), viper.GetString("port"))
-	fmt.Printf("serving at port %s\n", host)
+	fmt.Printf("Serving at port %s\n", host)
 	log.Fatal(http.ListenAndServe(host, nil))
 }
 
