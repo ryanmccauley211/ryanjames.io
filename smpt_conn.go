@@ -33,9 +33,9 @@ func (mail *Mail) BuildMessage() string {
 	message += fmt.Sprintf("Subject: %s from %s\r\n", mail.subject, mail.senderAddr)
 	message += fmt.Sprintf("\n\n")
 	message += fmt.Sprint("-----------------------------------------------------------------\n\n")
-	message += fmt.Sprintf("Contact: ", mail.contactNum)
+	message += fmt.Sprintf("Contact: %s", mail.contactNum)
 	message += fmt.Sprintf("\n")
-	message += fmt.Sprintf("Project: " + mail.projectName)
+	message += fmt.Sprintf("Project: %s", mail.projectName)
 	message += fmt.Sprintf("\n")
 	message += fmt.Sprint("-----------------------------------------------------------------\n\n")
 	message += "\r\n" + mail.body

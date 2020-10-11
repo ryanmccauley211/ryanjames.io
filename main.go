@@ -9,9 +9,8 @@ import (
 	"net/http"
 )
 
-var email string
-var pass string
 var projectTodos = map[string]TodoList{}
+var smtpCred = SmtpCred{}
 
 func handleIndex(w http.ResponseWriter, _ *http.Request) {
 	tmpl, err := template.ParseFiles("static/templates/index.html")
@@ -67,26 +66,27 @@ func handleAbout(w http.ResponseWriter, _ *http.Request) {
 func handleSend(response *http.Request) {
 	checkCriticalErr(response.ParseForm())
 	formType := response.PostFormValue("form-type")
+
 	if formType == "hire" {
 		name := response.PostFormValue("first-name") + " " + response.PostFormValue("last-name") +
 			" contact: " + response.PostFormValue("contact-num")
-		SendMail("Hire", name, response.PostFormValue("email"), response.PostFormValue("message"), email, pass, response.PostFormValue("contact-num"), "")
+		SendMail("Hire", name, response.PostFormValue("email"), response.PostFormValue("message"), smtpCred.email, smtpCred.pass, response.PostFormValue("contact-num"), "")
 	} else if formType == "contribute" {
 		name := response.PostFormValue("first-name") + " " + response.PostFormValue("last-name")
 		SendMail("Contribute to "+response.PostFormValue("project-name"), name,
-			response.PostFormValue("email"), response.PostFormValue("message"), email, pass, "", response.PostFormValue("project-name"))
+			response.PostFormValue("email"), response.PostFormValue("message"), smtpCred.email, smtpCred.pass, "", response.PostFormValue("project-name"))
 	} else if formType == "other" {
 		name := response.PostFormValue("first-name") + " " + response.PostFormValue("last-name")
-		SendMail("General", name, response.PostFormValue("email"), response.PostFormValue("message"), email, pass, "", "")
+		SendMail("General", name, response.PostFormValue("email"), response.PostFormValue("message"), smtpCred.email, smtpCred.pass, "", "")
 	}
 }
 
 func main() {
-
-	//email = os.Args[1]
-	//pass = os.Args[2]
-
 	Init()
+
+	smtpCred.email = viper.GetString("email")
+	smtpCred.pass = viper.GetString("pass")
+
 	fmt.Printf("Initializing...\n")
 	checkCriticalErr(getTodoList("oak", "https://github.com/ryanmccauley211/Oak/blob/master/README.md"))
 
@@ -148,6 +148,11 @@ type TodoList struct {
 	Unchecked []string
 	Deleted   []string
 	Loaded    bool
+}
+
+type SmtpCred struct {
+	email string
+	pass  string
 }
 
 func checkCriticalErr(err error) {
