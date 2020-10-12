@@ -12,6 +12,11 @@ pipeline {
                 sh 'go build'
             }
         }
+        stage('Compile') {
+            steps {
+                sh 'go get -d ./...'
+            }
+        }
         stage('Setup Environment') {
             steps {
                 sh 'export email=$SMTP_EMAIL'
