@@ -13,7 +13,8 @@ pipeline {
         }
         stage('Compile') {
             steps {
-                sh 'go get -d ./...'
+                sh 'export XDG_CACHE_HOME=/tmp/.cache'
+                sh 'go get -d -v ./...'
                 sh 'go build'
             }
         }
