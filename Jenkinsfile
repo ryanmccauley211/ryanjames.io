@@ -9,12 +9,12 @@ pipeline {
             steps {
                 echo 'Installing dependencies'
                 sh 'go version'
-                sh 'go build'
             }
         }
         stage('Compile') {
             steps {
                 sh 'go get -d ./...'
+                sh 'go build'
             }
         }
         stage('Setup Environment') {
