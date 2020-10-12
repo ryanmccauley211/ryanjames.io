@@ -1,5 +1,10 @@
 pipeline {
-    agent { docker { image 'golang' } }
+    agent {
+        docker {
+            image 'golang'
+            args '-e XDG_CACHE_HOME=/tmp/.cache'
+        }
+    }
     environment {
         SMTP_EMAIL = credentials('smtp-email')
         SMTP_PASS = credentials('smtp-pass')
@@ -13,7 +18,6 @@ pipeline {
         }
         stage('Compile') {
             steps {
-                sh 'export XDG_CACHE_HOME=/tmp/.cache'
                 sh 'go get -d -v ./...'
                 sh 'go build'
             }
