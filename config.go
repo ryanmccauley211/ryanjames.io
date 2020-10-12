@@ -26,5 +26,11 @@ func Init() {
 		return
 	}
 
+	if viper.GetString("email") == "" {
+		panic("No email supplied for smtp")
+	}
+	if viper.GetString("pass") == "" {
+		panic("No password supplied for smtp")
+	}
 	fmt.Println("Config successfully loaded")
 }
