@@ -6,32 +6,28 @@ pipeline {
         }
     }
     environment {
+        REGISTRY = 'ryanmccauley211/ryanjames'
         SMTP_EMAIL = credentials('smtp-email')
         SMTP_PASS = credentials('smtp-pass')
     }
     stages {
-        stage('Pre Test') {
+        stage('Environment Setup') {
             steps {
-                echo 'Installing dependencies'
                 sh 'go version'
-            }
-        }
-        stage('Compile') {
-            steps {
-                sh 'go get -d -v ./...'
-                sh 'go build'
-            }
-        }
-        stage('Setup Environment') {
-            steps {
                 sh 'export email=$SMTP_EMAIL'
                 sh 'export pass=$SMTP_PASS'
             }
         }
-        stage('Run') {
+        stage('Compile') {
             steps {
-                echo 'Running ryanjames.io web server'
-                sh 'go run *.go'
+                echo 'Installing go dependencies'
+                sh 'go get -d -v ./...'
+                sh 'go build'
+            }
+        }
+        stage('Build') {
+            script {
+              docker.build REGISTRY + ":$BUILD_NUMBER"
             }
         }
     }
